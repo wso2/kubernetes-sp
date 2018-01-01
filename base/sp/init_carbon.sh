@@ -19,7 +19,7 @@
 set -e
 # Copy the backed up artifacts from ${HOME}/tmp/server/. Copying the initial artifacts to ${HOME}/tmp/server/ is done in the 
 # Dockerfile. This is to preserve the initial artifacts in a volume mount (the mounted directory can be empty initially). 
-# The artifacts will be copied to the CARBON_HOME/repository/deployment/server location before the server is started.
+# The artifacts will be copied to the CARBON_HOME/deployment location before the server is started.
 carbon_home=${HOME}/${WSO2_SERVER}-${WSO2_SERVER_VERSION}/wso2/${WSO2_SERVER_PROFILE}
 server_artifact_location=${carbon_home}/deployment
 if [[ -d ${HOME}/tmp/server/ ]]; then
@@ -49,7 +49,7 @@ if [ -e ${carbon_home}-conf/conf ]; then
 fi
 
 
-# unique node id
+# update node ip
 export local_docker_ip=$(ip route get 1 | awk '{print $NF;exit}')
 deployment_yaml_location=${server_conf}/deployment.yaml
 if [[ ! -z ${local_docker_ip} ]]; then
