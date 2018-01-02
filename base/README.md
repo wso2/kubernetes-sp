@@ -18,7 +18,7 @@ Add the above files to `sp/files` location.
 
 - Edit /etc/default/docker and add `--experimental=true` flag to DOCKER_OPTS variable.
 
-##### 2. Build docker images
+##### 4. Build docker images
 
 Run build.sh
 ```
