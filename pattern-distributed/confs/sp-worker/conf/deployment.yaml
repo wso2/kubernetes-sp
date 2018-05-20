@@ -400,7 +400,6 @@ deployment.config:
     - host: wso2sp-manager-1
       port: 9090
       username: admin
-      username: admin
       password: admin
     - host: wso2sp-manager-2
       port: 9090
