@@ -1,0 +1,68 @@
+# Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sp-rdbms-deployment
+  labels:
+    app: sp-rdbms
+    pattern: wso2sp-pattern-distributed
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sp-rdbms
+        tier: sp-rdbms
+        pattern: wso2sp-pattern-distributed
+    spec:
+      containers:
+      - image: mysql:5.7
+        name: sp-rdbms
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: root
+          - name: MYSQL_DATABASE
+            value: SP_MGT_DB
+          - name: MYSQL_USER
+            value: wso2carbon
+          - name: MYSQL_PASSWORD
+            value: wso2carbon
+        ports:
+        - containerPort: 3306
+          name: sp-rdbms
+        volumeMounts:
+        - name: mysql-conf
+          mountPath: /etc/mysql/conf.d/my.cnf
+        - name: mysql-dbscripts
+          mountPath: /docker-entrypoint-initdb.d
+        args: ["--max-connections", "10000"]
+       #- name: sp-rdbms-persistent-storage
+       #  mountPath: /var/lib/mysql
+      serviceAccountName: "wso2svcacct"
+      volumes:
+      - name: mysql-dbscripts
+        configMap:
+          name: mysql-dbscripts
+      - name: mysql-conf
+        configMap:
+          name: mysql-conf
+     #- name: sp-rdbms-persistent-storage
+     #  persistentVolumeClaim:
+     #    claimName: sp-rdbms-volume-claim
+
+
