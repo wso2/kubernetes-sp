@@ -36,7 +36,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         -
-          name: wso2_server_profile
+          name: WSO2_SERVER_PROFILE
           value: "manager"
         -
           name: NODE_ID
