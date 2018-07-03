@@ -1,5 +1,5 @@
 ################################################################################
-#   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved
+#   Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved
 #
 #   Licensed under the Apache License, Version 2.0 (the \"License\");
 #   you may not use this file except in compliance with the License.
@@ -390,18 +390,19 @@ cluster.config:
   # Sample of deployment.config for Distributed deployment
 deployment.config:
   type: distributed
-  httpInterface:
+  isReceiverNode: false
+  httpsInterface:
     host: ${NODE_IP}
-    port: 9090
+    port: 9443
     username: admin
     password: admin
   leaderRetryInterval: 10000
   resourceManagers:
     - host: wso2sp-manager-1
-      port: 9090
+      port: 9543
       username: admin
       password: admin
     - host: wso2sp-manager-2
-      port: 9090
+      port: 9543
       username: admin
       password: admin
