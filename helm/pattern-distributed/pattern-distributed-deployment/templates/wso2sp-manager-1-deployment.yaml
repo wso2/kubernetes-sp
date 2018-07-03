@@ -15,10 +15,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: wso2sp-dashboard
+  name: wso2sp-manager-1
+  namespace: {{ .Values.namespace }}
   labels:
-    app: wso2sp-dashboard
-    node: wso2sp-dashboard
+    app: wso2sp-manager
+    node: wso2sp-manager-1
     pattern: wso2sp-pattern-distributed
 spec:
   strategy:
@@ -26,21 +27,21 @@ spec:
   template:
     metadata:
       labels:
-        app: wso2sp-dashboard
-        node: wso2sp-dashboard
+        app: wso2sp-manager
+        node: wso2sp-manager-1
         pattern: wso2sp-pattern-distributed
     spec:
       containers:
       - image: docker.wso2.com/wso2sp-manager:4.2.0
-        name: wso2sp-status-dashboard
+        name: wso2sp-manager-1
         imagePullPolicy: IfNotPresent
         env:
         -
           name: WSO2_SERVER_PROFILE
-          value: "dashboard"
+          value: "manager"
         -
           name: NODE_ID
-          value: "wso2sp-status-dashboard"
+          value: "wso2sp-manager-1"
         -
            name: NODE_IP
            valueFrom:
@@ -49,21 +50,41 @@ spec:
 
         ports:
         -
-          containerPort: 9643
+          containerPort: 9090
+          protocol: "TCP"
+        -
+          containerPort: 9543
+          protocol: "TCP"
+        -
+          containerPort: 9711
+          protocol: "TCP"
+        -
+          containerPort: 9611
+          protocol: "TCP"
+        -
+          containerPort: 7711
+          protocol: "TCP"
+        -
+          containerPort: 7611
           protocol: "TCP"
 
         volumeMounts:
-        - name: sp-dashboard-conf
-          mountPath: "/home/wso2carbon/kubernetes-volumes/dashboard/conf/"
+        - name: sp-manager-conf
+          mountPath: "/home/wso2carbon/kubernetes-volumes/manager/conf/"
+        - name: sp-mgt-storage-volume
+          mountPath: "/home/wso2carbon/wso2sp-4.2.0/deployment/siddhi-files/"
         livenessProbe:
           tcpSocket:
-            port: 9643
+            port: 9543
           initialDelaySeconds: 300
           periodSeconds: 20
       imagePullSecrets:
             - name: wso2creds
       volumes:
-      - name: sp-dashboard-conf
+      - name: sp-manager-conf
         configMap:
-          name: sp-dashboard-conf
-      serviceAccountName: "wso2svcacct"
+          name: sp-manager-conf
+      - name: sp-mgt-storage-volume
+        persistentVolumeClaim:
+          claimName: sp-mgt-volume-claim
+      serviceAccountName: {{ .Values.svcaccount }}

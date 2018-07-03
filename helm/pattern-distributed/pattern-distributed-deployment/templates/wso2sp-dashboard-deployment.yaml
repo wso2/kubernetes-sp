@@ -16,6 +16,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: wso2sp-dashboard
+  namespace: {{ .Values.namespace }}
   labels:
     app: wso2sp-dashboard
     node: wso2sp-dashboard
@@ -31,7 +32,7 @@ spec:
         pattern: wso2sp-pattern-distributed
     spec:
       containers:
-      - image: docker.wso2.com/wso2sp-manager:4.2.0
+      - image: docker.wso2.com/wso2sp-dashboard:4.2.0
         name: wso2sp-status-dashboard
         imagePullPolicy: IfNotPresent
         env:
@@ -66,4 +67,4 @@ spec:
       - name: sp-dashboard-conf
         configMap:
           name: sp-dashboard-conf
-      serviceAccountName: "wso2svcacct"
+      serviceAccountName:  {{ .Values.svcaccount }}
