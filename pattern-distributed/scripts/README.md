@@ -79,9 +79,6 @@ In a **production setup**,
   * `KUBERNETES_HOME/pattern-distributed/confs/sp-manager/conf/deployment.yaml`
   * `KUBERNETES_HOME/pattern-distributed/confs/sp-worker/conf/deployment.yaml`
 
-  
-  Please refer WSO2's [official documentation](https://docs.wso2.com/display/ADMIN44x/Configuring+master-datasources.xml) on configuring data sources.
-
 ##### 5. Deploy Kubernetes resources:
 
 Change directory to `KUBERNETES_HOME/sp-distributed/scripts` and execute the `deploy.sh` shell script on the terminal, with the appropriate configurations as follows:
@@ -122,7 +119,7 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 
 a. Dropping the .siddhi file in to the /data/pattern-distributed/siddhi-files in the NFS node directory before or after starting the manager node.
 
-b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below. Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP400/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
+b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below. Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP410/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
 
 ```
 curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k
@@ -142,4 +139,4 @@ Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite brows
 
 > NFS is tested in Kubernetes v1.8.8
 
-**For detailed instructions to configure Fully Distributed WSO2 SP cluster refer [Deployment Guide](https://docs.wso2.com/display/SP400/Fully+Distributed+Deployment)**
+**For detailed instructions to configure Fully Distributed WSO2 SP cluster refer [Deployment Guide](https://docs.wso2.com/display/SP410/Fully+Distributed+Deployment)**
