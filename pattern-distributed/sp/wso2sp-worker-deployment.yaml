@@ -33,8 +33,7 @@ spec:
     spec:
       containers:
       -
-        #image: docker.wso2.com/wso2sp-worker:4.1.0
-        image: wso2sp-worker:4.1.0
+        image: docker.wso2.com/wso2sp-worker:4.2.0
         name: wso2sp-worker
         imagePullPolicy: IfNotPresent
         env:
