@@ -1,11 +1,11 @@
-# WSO2 Stream Processor 4.1.0 Distributed Deployment Kubernetes Resources 
+# WSO2 Stream Processor 4.2.0 Distributed Deployment Kubernetes Resources 
 
 *Kubernetes Test Resources for deployment of Fully Distributed deployment of WSO2 Stream Processor (SP)*
 
 ## Prerequisites
 
 * In order to use these Kubernetes resources, you will need an active [Free Trial Subscription](https://wso2.com/free-trial-subscription)
-from WSO2 since the referring Docker images hosted at docker.wso2.com contains the latest updates and fixes for WSO2 Enterprise Integrator.
+from WSO2 since the referring Docker images hosted at docker.wso2.com contains the latest updates and fixes for WSO2 Stream Processor.
 You can sign up for a Free Trial Subscription [here](https://wso2.com/free-trial-subscription).<br><br>
 
 * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Docker](https://www.docker.com/get-docker)
@@ -28,7 +28,7 @@ in order to run the steps provided<br>in the following quick start guide.<br><br
 >In the context of this document, `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-sp`](https://github.com/wso2/kubernetes-sp/)
 Git repository.<br>
 
-##### 1. Checkout Kubernetes Resources for WSO2 Enterprise Integrator Git repository:
+##### 1. Checkout Kubernetes Resources for WSO2 Stream Processor Git repository:
 
 ```
 git clone https://github.com/wso2/kubernetes-sp.git
@@ -36,7 +36,7 @@ git clone https://github.com/wso2/kubernetes-sp.git
 ```
 ##### 2. Deploy Kubernetes Ingress resource:
 
-The WSO2 Enterprise Integrator Kubernetes Ingress resource uses the NGINX Ingress Controller.
+The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
 
 In order to enable the NGINX Ingress controller in the desired cloud or on-premise environment,
 please refer the official documentation, [NGINX Ingress Controller Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
