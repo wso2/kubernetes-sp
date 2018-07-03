@@ -2,7 +2,7 @@
 
 ![](sp-k8s-distributed.png)
 
-# WSO2 Stream Processor 4.2.0 Distributed Deployment Kubernetes Resources 
+# WSO2 Stream Processor 4.1.0 Distributed Deployment Kubernetes Resources 
 
 *Kubernetes Resources for container-based distributed deployment of WSO2 Stream Processor (SP)*
 

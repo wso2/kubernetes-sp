@@ -1,4 +1,4 @@
-# WSO2 Stream Processor 4.2.0 Distributed Deployment Kubernetes Resources 
+# WSO2 Stream Processor 4.1.0 Distributed Deployment Kubernetes Resources 
 
 *Kubernetes Test Resources for deployment of Fully Distributed deployment of WSO2 Stream Processor (SP)*
 
