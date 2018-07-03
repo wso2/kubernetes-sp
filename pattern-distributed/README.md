@@ -9,7 +9,7 @@
 ## Prerequisites
 
 * In order to use these Kubernetes resources, you will need an active [Free Trial Subscription](https://wso2.com/free-trial-subscription)
-from WSO2 since the referring Docker images hosted at docker.wso2.com contains the latest updates and fixes for WSO2 Enterprise Integrator.
+from WSO2 since the referring Docker images hosted at docker.wso2.com contains the latest updates and fixes for WSO2 Stream Processor.
 You can sign up for a Free Trial Subscription [here](https://wso2.com/free-trial-subscription).<br><br>
 
 * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Docker](https://www.docker.com/get-docker)
@@ -23,7 +23,7 @@ in order to run the steps provided<br>in the following quick start guide.<br><br
 >In the context of this document, `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-sp`](https://github.com/wso2/kubernetes-sp/)
 Git repository.<br>
 
-##### 1. Checkout Kubernetes Resources for WSO2 Enterprise Integrator Git repository:
+##### 1. Checkout Kubernetes Resources for WSO2 Stream Processor Git repository:
 
 ```
 git clone https://github.com/wso2/kubernetes-sp.git
@@ -104,7 +104,7 @@ for deploying the product databases, using MySQL in Kubernetes. However, this ap
 kubectl create --username=admin --password=<cluster-admin-password> -f <KUBERNETES_HOME>/rbac/rbac.yaml
 ```
 
-##### 6. Setup a Network File System (NFS) to be used as the persistent volume for artifact sharing across Integrator and Analytics instances.
+##### 6. Setup a Network File System (NFS) to be used as the persistent volume for artifact sharing across Stream Processor instances.
 
 Update the NFS server IP (`NFS_SERVER_IP`) and export path (`NFS_LOCATION_PATH`) of persistent volume resources,
 
@@ -131,7 +131,7 @@ kubectl create configmap sp-manager-conf --from-file=<KUBERNETES_HOME>/confs/sp-
 kubectl create configmap sp-worker-conf --from-file=<KUBERNETES_HOME>/confs/sp-worker/conf/
 kubectl create configmap sp-dashboard-conf --from-file=<KUBERNETES_HOME>/confs/status-dashboard/conf/
 ```    
-##### 8. Create Kubernetes Services and Deployments for WSO2 Enterprise Integrator and Analytics:
+##### 8. Create Kubernetes Services and Deployments for WSO2 Stream Processor Manager and Resource nodes:
 
 ```
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-manager-1-service.yaml
@@ -146,17 +146,17 @@ kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-worker-deploym
 ```
 ##### 9. Deploy Kubernetes Ingress resource:
 
-The WSO2 Enterprise Integrator Kubernetes Ingress resource uses the NGINX Ingress Controller.
+The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
 
 In order to enable the NGINX Ingress controller in the desired cloud or on-premise environment,
 please refer the official documentation, [NGINX Ingress Controller Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
 
-Finally, deploy the WSO2 Enterprise Integrator Kubernetes Ingress resources as follows:
+Finally, deploy the WSO2 Stream Processor Kubernetes Ingress resources as follows:
 
 ```
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/ingresses/wso2-dashboard-ingress.yaml
-kubectl create -f <KUBERNETES_HOME>/integrator-analytics/ingresses/wso2sp-manager-1-ingress.yaml
-kubectl create -f <KUBERNETES_HOME>/integrator-analytics/ingresses/wso2sp-manager-2-ingress.yaml
+kubectl create -f <KUBERNETES_HOME>/pattern-distributed/ingresses/wso2sp-manager-1-ingress.yaml
+kubectl create -f <KUBERNETES_HOME>/pattern-distributed/ingresses/wso2sp-manager-2-ingress.yaml
 ```
 ##### 10. Update /etc/hosts:
 
