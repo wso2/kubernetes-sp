@@ -40,7 +40,7 @@ configurations as necessary.
     `svcaccount`: Service Account<br>
     `serverIp`: NFS Server IP<br>
     `locationPath`: NFS location path<br>
-    `sharedSiddhiFilesLocationPath`: NFS shared Siddhi file directory(<SP_HOME>deployment/siddhi-files/)<br> 
+    `sharedSiddhiFilesLocationPath`: NFS location path for shared Siddhi file directory(<SP_HOME>/deployment/siddhi-files/)<br> 
    
 3. Open the `<HELM_HOME>/pattern-distributed-deployment/values.yaml` and provide the following values.
 
