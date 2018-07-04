@@ -103,7 +103,7 @@ wso2sp-manager-2-ingress        wso2sp-manager-2   <EXTERNAL-IP>   80, 443   25m
 <EXTERNAL-IP>	wso2sp-manager-2
 ```
 
-3. Try navigating to `https://wso2sp-dashboard/monitor` from your favorite browser.
+3. Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
 
 ##### 7. Siddhi applications should be deployed to the manager cluster using one of the following methods:
 

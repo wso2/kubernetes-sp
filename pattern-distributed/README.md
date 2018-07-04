@@ -1,6 +1,6 @@
 # Kubernetes resources for a fully distributed deployment of WSO2 Stream Processor
 
-Core Kubernetes resources for a fully distributed deployment of WSO2 Stream Processor.
+Core Kubernetes resources for a [fully distributed deployment of WSO2 Stream Processor](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment).
 
 ![A fully distributed deployment of WSO2 Stream Processor](sp-k8s-distributed.png)
 
@@ -10,7 +10,7 @@ Core Kubernetes resources for a fully distributed deployment of WSO2 Stream Proc
 WSO2 subscription already, you can sign up for a WSO2 Free Trial Subscription from [here](https://wso2.com/free-trial-subscription).<br><br>
 
 * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-in order to run the steps provided<br>in the following quick start guide.<br><br>
+in order to run the steps provided in the following quick start guide.<br><br>
 
 * An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/)<br><br>
 
@@ -171,7 +171,7 @@ kubectl create -f <KUBERNETES_HOME>/pattern-distributed/ingresses/wso2sp-manager
 ```
 ##### 10. Update /etc/hosts.
 
-Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses (using `kubectl get ing`).
+1. Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses (using `kubectl get ing`).
 
 e.g.
 
@@ -190,6 +190,8 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 <EXTERNAL-IP>	wso2sp-manager-2
 ```
 
+3. Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
+
 ##### 11. Siddhi applications should be deployed to the manager cluster using one of the following methods.
 
 a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
@@ -203,9 +205,5 @@ curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json
 
 Default deployment will expose two publicly accessible hosts, namely: <br>
 
-1. `wso2sp-manager-1` - To expose Manager Node 1 <br>
-2. `wso2sp-manager-2` - To expose Manager Node 2 <br>
-
-##### 12. Access Status Dashboard.
-
-Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
+* `wso2sp-manager-1` - To expose Manager Node 1 <br>
+* `wso2sp-manager-2` - To expose Manager Node 2 <br>

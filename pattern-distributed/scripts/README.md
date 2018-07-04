@@ -1,6 +1,6 @@
 # WSO2 Stream Processor 4.2.0 Distributed Deployment Kubernetes Resources
 
-Kubernetes Test Resources for a fully distributed deployment of WSO2 Stream Processor contain artifacts,
+Kubernetes Test Resources for a [fully distributed deployment of WSO2 Stream Processor](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment) contain artifacts,
 which can be used to test the core Kubernetes resources provided for a fully distributed deployment of WSO2 Stream Processor.
 
 ## Prerequisites
@@ -9,7 +9,7 @@ which can be used to test the core Kubernetes resources provided for a fully dis
 WSO2 subscription already, you can sign up for a WSO2 Free Trial Subscription from [here](https://wso2.com/free-trial-subscription).<br><br>
 
 * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-in order to run the steps provided<br>in the following quick start guide.<br><br>
+in order to run the steps provided in the following quick start guide.<br><br>
 
 * An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/)<br><br>
 
@@ -131,6 +131,7 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 <EXTERNAL-IP>	wso2sp-manager-2
 ```
 
+3. Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
 
 ##### 7. Siddhi applications should be deployed to the manager cluster using one of the following methods:
 
@@ -146,15 +147,3 @@ Default deployment will expose two publicly accessible hosts, namely: <br>
 
 1. `wso2sp-manager-1` - To expose Manager Node 1 <br>
 2. `wso2sp-manager-2` - To expose Manager Node 2 <br>
-
-##### 8. Access Status Dashboard:
-
-Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
-
-<br>
-
-> Tested in Kubernetes v1.8.8
-
-> NFS is tested in Kubernetes v1.8.8
-
-**For detailed instructions to configure Fully Distributed WSO2 SP cluster refer [Deployment Guide](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment)**
