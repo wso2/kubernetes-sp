@@ -1,0 +1,128 @@
+## mysql image version
+## ref: https://hub.docker.com/r/library/mysql/tags/
+##
+image: "mysql"
+imageTag: "5.7.14"
+
+## Specify password for root user
+##
+## Default: random 10 character string
+mysqlRootPassword: root
+
+## Create a database user
+##
+mysqlUser: wso2carbon
+## Default: random 10 character string
+mysqlPassword: wso2carbon
+
+## Allow unauthenticated access, uncomment to enable
+##
+# mysqlAllowEmptyPassword: true
+
+## Create a database
+##
+# mysqlDatabase:
+
+## Specify an imagePullPolicy (Required)
+## It's recommended to change this to 'Always' if the image tag is 'latest'
+## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
+##
+imagePullPolicy: IfNotPresent
+
+# Optionally specify an array of imagePullSecrets.
+# Secrets must be manually created in the namespace.
+# ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+# imagePullSecrets:
+  # - name: myRegistryKeySecretName
+
+## Node selector
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+nodeSelector: {}
+
+livenessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 3
+
+## Persist data to a persistent volume
+persistence:
+  enabled: true
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##a
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
+
+# Custom mysql configuration files used to override default mysql settings
+configurationFiles:
+  mysql.cnf: |-
+    [mysqld]
+    max_connections = 10000
+#    ssl-ca=/ssl/ca.pem
+#    ssl-cert=/ssl/server-cert.pem
+#    ssl-key=/ssl/server-key.pem
+
+# Custom mysql init SQL files used to initialize the database
+initializationFiles:
+  init.sql: "-- \n-- Copyright 2018 WSO2 Inc. (http://wso2.org)\n-- \n-- Licensed
+    under the Apache License, Version 2.0 (the \"License\");\n-- you may not use this
+    file except in compliance with the License.\n-- You may obtain a copy of the License
+    at\n-- \n--     http://www.apache.org/licenses/LICENSE-2.0\n-- \n-- Unless required
+    by applicable law or agreed to in writing, software\n-- distributed under the
+    License is distributed on an \"AS IS\" BASIS,\n-- WITHOUT WARRANTIES OR CONDITIONS
+    OF ANY KIND, either express or implied.\n-- See the License for the specific language
+    governing permissions and\n-- limitations under the License.\n--\n\nDROP DATABASE
+    IF EXISTS SP_MGT_DB;\nDROP DATABASE IF EXISTS SP_WORKER_STATE_DB;\n\nCREATE DATABASE
+    SP_MGT_DB;\nCREATE DATABASE SP_WORKER_STATE_DB;\nCREATE DATABASE cepDB;\nCREATE
+    DATABASE spDB;\n\nCREATE USER IF NOT EXISTS 'wso2carbon'@'%' IDENTIFIED BY 'wso2carbon';\nGRANT
+    ALL ON SP_MGT_DB.* TO 'wso2carbon'@'%' IDENTIFIED BY 'wso2carbon';\nGRANT ALL
+    ON SP_WORKER_STATE_DB.* TO 'wso2carbon'@'%' IDENTIFIED BY 'wso2carbon';\nGRANT
+    ALL ON cepDB.* TO 'wso2carbon'@'%' IDENTIFIED BY 'wso2carbon';\nGRANT ALL ON spDB.*
+    TO 'wso2carbon'@'%' IDENTIFIED BY 'wso2carbon';\n\n"
+service:
+  ## Specify a service type
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types
+  type: ClusterIP
+  port: 3306
+  # nodePort: 32000
+
+ssl:
+  enabled: false
+  secret: mysql-ssl-certs
+  certificates:
+#  - name: mysql-ssl-certs
+#    ca: |-
+#      -----BEGIN CERTIFICATE-----
+#      ...
+#      -----END CERTIFICATE-----
+#    cert: |-
+#      -----BEGIN CERTIFICATE-----
+#      ...
+#      -----END CERTIFICATE-----
+#    key: |-
+#      -----BEGIN RSA PRIVATE KEY-----
+#      ...
+#      -----END RSA PRIVATE KEY-----
+

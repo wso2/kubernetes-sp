@@ -15,55 +15,75 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: wso2sp-dashboard
+  name: wso2sp-worker
+  namespace: {{ .Values.namespace }}
   labels:
-    app: wso2sp-dashboard
-    node: wso2sp-dashboard
+    app: wso2sp-worker
+    node: wso2sp-worker
     pattern: wso2sp-pattern-distributed
 spec:
   strategy:
     type: Recreate
+  replicas: 3
   template:
     metadata:
       labels:
-        app: wso2sp-dashboard
-        node: wso2sp-dashboard
+        app: wso2sp-worker
+        node: wso2sp-worker
         pattern: wso2sp-pattern-distributed
     spec:
       containers:
-      - image: docker.wso2.com/wso2sp-manager:4.2.0
-        name: wso2sp-status-dashboard
+      -
+        image: docker.wso2.com/wso2sp-worker:4.2.0
+        name: wso2sp-worker
         imagePullPolicy: IfNotPresent
         env:
         -
           name: WSO2_SERVER_PROFILE
-          value: "dashboard"
+          value: "worker"
         -
-          name: NODE_ID
-          value: "wso2sp-status-dashboard"
-        -
-           name: NODE_IP
-           valueFrom:
-             fieldRef:
-               fieldPath: status.podIP
+          name: NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MY_POD_NAME
+          value: wso2sp-worker
 
         ports:
         -
-          containerPort: 9643
+          containerPort: 9090
+          protocol: "TCP"
+        -
+          containerPort: 9443
+          protocol: "TCP"
+        -
+          containerPort: 9543
+          protocol: "TCP"
+        -
+          containerPort: 9711
+          protocol: "TCP"
+        -
+          containerPort: 9611
+          protocol: "TCP"
+        -
+          containerPort: 7711
+          protocol: "TCP"
+        -
+          containerPort: 7611
           protocol: "TCP"
 
         volumeMounts:
-        - name: sp-dashboard-conf
-          mountPath: "/home/wso2carbon/kubernetes-volumes/dashboard/conf/"
+        - name: sp-worker-conf
+          mountPath: "/home/wso2carbon/kubernetes-volumes/worker/conf/"
         livenessProbe:
           tcpSocket:
-            port: 9643
+            port: 9443
           initialDelaySeconds: 300
           periodSeconds: 20
       imagePullSecrets:
-            - name: wso2creds
+      - name: wso2creds
+      serviceAccountName: {{ .Values.svcaccount }}
       volumes:
-      - name: sp-dashboard-conf
+      - name: sp-worker-conf
         configMap:
-          name: sp-dashboard-conf
-      serviceAccountName: "wso2svcacct"
+          name: sp-worker-conf
