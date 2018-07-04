@@ -18,7 +18,7 @@ in order to run the steps provided in the following quick start guide.<br><br>
    
      1. Update the NFS server IP in `<KUBERNETES_HOME>/pattern-distributed/artifacts/volumes/persistent-volumes.yaml`
      2. Create required directories in NFS server as mentioned in `KUBERNETES_HOME/pattern-distributed/artifacts/volumes/persistent-volumes.yaml`
-        eg: create directories as `/data/pattern-distributed/siddhi-files`
+        e.g. create directories as `/data/pattern-distributed/siddhi-files`<br><br>
       
 * It is recommended to use a MySQL or any database cluster in a production environment. A single MySQL container is used with host path mount in these deployments.
 
