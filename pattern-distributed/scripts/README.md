@@ -134,7 +134,7 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 
 ##### 7. Siddhi applications should be deployed to the manager cluster using one of the following methods:
 
-a. Dropping the .siddhi file in to the /data/pattern-distributed/siddhi-files in the NFS node directory before or after starting the manager node.
+a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
 
 b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below. Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP400/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
 

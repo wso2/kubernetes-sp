@@ -19,7 +19,7 @@ in order to run the steps provided<br>in the following quick start guide.<br><br
 >In the context of this document, `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-sp`](https://github.com/wso2/kubernetes-sp/)
 Git repository.<br>
 
-##### 1. Clone Kubernetes Resources for WSO2 Stream Processor Git repository:
+##### 1. Clone Kubernetes Resources for WSO2 Stream Processor Git repository.
 
 ```
 git clone https://github.com/wso2/kubernetes-sp.git
@@ -38,7 +38,7 @@ Then, switch the context to new `wso2` namespace from `default` namespace.
 kubectl config set-context $(kubectl config current-context) --namespace=wso2
 ```
 
-##### 3. Create a Kubernetes Secret for pulling the required Docker images from [`WSO2 Docker Registry`](https://docker.wso2.com):
+##### 3. Create a Kubernetes Secret for pulling the required Docker images from [`WSO2 Docker Registry`](https://docker.wso2.com).
 
 Create a Kubernetes Secret named `wso2creds` in the cluster to authenticate with the WSO2 Docker Registry, to pull the required images.
 
@@ -52,7 +52,7 @@ kubectl create secret docker-registry wso2creds --docker-server=docker.wso2.com 
 Please see [Kubernetes official documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-in-the-cluster-that-holds-your-authorization-token)
 for further details.
 
-##### 4. Setup and configure external product database(s):
+##### 4. Setup product database(s).
 
 Setup the external product databases. Please refer WSO2's [official documentation](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment) on creating the required databases for the deployment.
                                        
@@ -133,7 +133,7 @@ kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-mgt-volume-cla
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/volumes/persistent-volumes.yaml
 ```
 
-##### 7. Create Kubernetes ConfigMaps for passing WSO2 product configurations into the Kubernetes cluster:
+##### 7. Create Kubernetes ConfigMaps for passing WSO2 product configurations into the Kubernetes cluster.
 
 ```
 kubectl create configmap sp-manager-conf --from-file=<KUBERNETES_HOME>/confs/sp-manager/conf/
@@ -141,7 +141,7 @@ kubectl create configmap sp-worker-conf --from-file=<KUBERNETES_HOME>/confs/sp-w
 kubectl create configmap sp-dashboard-conf --from-file=<KUBERNETES_HOME>/confs/status-dashboard/conf/
 ```    
 
-##### 8. Create Kubernetes Services and Deployments for WSO2 Stream Processor Manager and Resource nodes:
+##### 8. Create Kubernetes Services and Deployments for WSO2 Stream Processor Manager and Resource nodes.
 
 ```
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-manager-1-service.yaml
@@ -155,7 +155,7 @@ kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-worker-service
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-worker-deployment.yaml
 ```
 
-##### 9. Deploy Kubernetes Ingress resource:
+##### 9. Deploy Kubernetes Ingress resource.
 
 The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
 
@@ -169,7 +169,7 @@ kubectl create -f <KUBERNETES_HOME>/pattern-distributed/ingresses/wso2-dashboard
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/ingresses/wso2sp-manager-1-ingress.yaml
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/ingresses/wso2sp-manager-2-ingress.yaml
 ```
-##### 10. Update /etc/hosts:
+##### 10. Update /etc/hosts.
 
 Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses (using `kubectl get ing`).
 
@@ -190,9 +190,9 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 <EXTERNAL-IP>	wso2sp-manager-2
 ```
 
-##### 11. Siddhi applications should be deployed to the manager cluster using one of the following methods:
+##### 11. Siddhi applications should be deployed to the manager cluster using one of the following methods.
 
-a. Dropping the .siddhi file in to the /data/pattern-distributed/siddhi-files in the NFS node directory before or after starting the manager node.
+a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
 
 b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below.
 Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP420/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
@@ -206,6 +206,6 @@ Default deployment will expose two publicly accessible hosts, namely: <br>
 1. `wso2sp-manager-1` - To expose Manager Node 1 <br>
 2. `wso2sp-manager-2` - To expose Manager Node 2 <br>
 
-##### 12. Access Status Dashboard:
+##### 12. Access Status Dashboard.
 
 Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
