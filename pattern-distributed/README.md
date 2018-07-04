@@ -1,19 +1,15 @@
-# Stream Processor Fully Distributed Deployment Diagram
+# Kubernetes resources for a fully distributed deployment of WSO2 Stream Processor
 
-![](sp-k8s-distributed.png)
+Core Kubernetes resources for a fully distributed deployment of WSO2 Stream Processor.
 
-# WSO2 Stream Processor 4.2.0 Distributed Deployment Kubernetes Resources 
-
-*Kubernetes Resources for container-based distributed deployment of WSO2 Stream Processor (SP)*
+![A fully distributed deployment of WSO2 Stream Processor](sp-k8s-distributed.png)
 
 ## Prerequisites
 
-* In order to use these Kubernetes resources, you will need an active [Free Trial Subscription](https://wso2.com/free-trial-subscription)
-from WSO2 since the referring Docker images hosted at docker.wso2.com contains the latest updates and fixes for WSO2 Stream Processor.
-You can sign up for a Free Trial Subscription [here](https://wso2.com/free-trial-subscription).<br><br>
+* In order to use WSO2 Kubernetes resources, you need an active WSO2 subscription. If you do not possess an active
+WSO2 subscription already, you can sign up for a WSO2 Free Trial Subscription from [here](https://wso2.com/free-trial-subscription).<br><br>
 
-* Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Docker](https://www.docker.com/get-docker)
-(version 17.09.0 or above) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 in order to run the steps provided<br>in the following quick start guide.<br><br>
 
 * An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/)<br><br>
@@ -23,7 +19,7 @@ in order to run the steps provided<br>in the following quick start guide.<br><br
 >In the context of this document, `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-sp`](https://github.com/wso2/kubernetes-sp/)
 Git repository.<br>
 
-##### 1. Checkout Kubernetes Resources for WSO2 Stream Processor Git repository:
+##### 1. Clone Kubernetes Resources for WSO2 Stream Processor Git repository:
 
 ```
 git clone https://github.com/wso2/kubernetes-sp.git
@@ -98,25 +94,37 @@ for deploying the product databases, using MySQL in Kubernetes. However, this ap
       kubectl create -f <KUBERNETES_HOME>/pattern-distributed/extras/rdbms/mysql/mysql-service.yaml
       kubectl create -f <KUBERNETES_HOME>/pattern-distributed/extras/rdbms/mysql/mysql-deployment.yaml  
      ```
+     
 ##### 5. Create a Kubernetes role and a role binding necessary for the Kubernetes API requests made from Kubernetes membership scheme.
 
 ```
 kubectl create --username=admin --password=<cluster-admin-password> -f <KUBERNETES_HOME>/rbac/rbac.yaml
 ```
 
+`K8S_CLUSTER_ADMIN_PASSWORD`: Kubernetes cluster admin password
+
 ##### 6. Setup a Network File System (NFS) to be used as the persistent volume for artifact sharing across Stream Processor instances.
 
-Update the NFS server IP (`NFS_SERVER_IP`) and export path (`NFS_LOCATION_PATH`) of persistent volume resources,
+Update the NFS server IP (`NFS_SERVER_IP`) and export path (`NFS_LOCATION_PATH`) of the following persistent volume resources
+defined in the `<KUBERNETES_HOME>/pattern-distributed/volumes/persistent-volumes.yaml` file.
 
 * `sp-manager-siddhi-files-pv`
 
-in `<KUBERNETES_HOME>/pattern-distributed/volumes/persistent-volumes.yaml` file.
-
-Create a user named `wso2carbon` with user id `802` and a group named `wso2` with group id `802` in the NFS node.
+Create a Linux system user account named `wso2carbon` with user id `802` and a system group named `wso2` with group id `802` in the NFS node.
 Add `wso2carbon` user to the group `wso2`.
 
-Then, provide ownership of the exported folder `NFS_LOCATION_PATH` (used for artifact sharing) to `wso2carbon` user and `wso2` group.
-And provide read-write-executable permissions to owning `wso2carbon` user, for the folder `NFS_LOCATION_PATH`.
+```
+groupadd --system -g 802 wso2
+useradd --system -g 802 -u 802 wso2carbon
+```
+
+Then, grant ownership of the exported folder `NFS_LOCATION_PATH` (used for artifact sharing) to `wso2carbon` user and `wso2` group.
+And grant read-write-execute permissions to owning `wso2carbon` user, for the folder `NFS_LOCATION_PATH`.
+
+```
+sudo chown -R wso2carbon:wso2 NFS_LOCATION_PATH
+chmod -R 700 NFS_LOCATION_PATH
+```
 
 Then, deploy the persistent volume resource and volume claim as follows:
 
@@ -124,6 +132,7 @@ Then, deploy the persistent volume resource and volume claim as follows:
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-mgt-volume-claim.yaml
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/volumes/persistent-volumes.yaml
 ```
+
 ##### 7. Create Kubernetes ConfigMaps for passing WSO2 product configurations into the Kubernetes cluster:
 
 ```
@@ -131,6 +140,7 @@ kubectl create configmap sp-manager-conf --from-file=<KUBERNETES_HOME>/confs/sp-
 kubectl create configmap sp-worker-conf --from-file=<KUBERNETES_HOME>/confs/sp-worker/conf/
 kubectl create configmap sp-dashboard-conf --from-file=<KUBERNETES_HOME>/confs/status-dashboard/conf/
 ```    
+
 ##### 8. Create Kubernetes Services and Deployments for WSO2 Stream Processor Manager and Resource nodes:
 
 ```
@@ -144,6 +154,7 @@ kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-dashboard-depl
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-worker-service.yaml
 kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-worker-deployment.yaml
 ```
+
 ##### 9. Deploy Kubernetes Ingress resource:
 
 The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
@@ -183,13 +194,15 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 
 a. Dropping the .siddhi file in to the /data/pattern-distributed/siddhi-files in the NFS node directory before or after starting the manager node.
 
-b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below. Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP400/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
+b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below.
+Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP420/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
 
 ```
 curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k
 ```
 
 Default deployment will expose two publicly accessible hosts, namely: <br>
+
 1. `wso2sp-manager-1` - To expose Manager Node 1 <br>
 2. `wso2sp-manager-2` - To expose Manager Node 2 <br>
 
