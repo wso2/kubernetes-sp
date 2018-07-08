@@ -1,4 +1,9 @@
-# Helm Chart for Stream Processor Fully Distributed Deployment
+# Helm Chart for a Fully Distributed Deployment of WSO2 Stream Processor
+
+## Contents
+
+* [Prerequisites](#prerequisites)
+* [Quick Start Guide](#quick-start-guide)
 
 ## Prerequisites
 
@@ -9,11 +14,22 @@
 (and Tiller) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/) in order to run the 
 steps provided in the following quick start guide.<br><br>
 
+* An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/).<br><br>
+
 * Install [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/). This can be done via
  
   ```
   helm install stable/nginx-ingress --name nginx-wso2sp-pattern-distributed --set rbac.create=true
   ```
+  
+* A pre-configured Network File System (NFS) to be used as the persistent volume for artifact sharing and persistence.
+In the NFS server instance, create a Linux system user account named `wso2carbon` with user id `802` and a system group named `wso2` with group id `802`.
+Add the `wso2carbon` user to the group `wso2`.
+
+```
+groupadd --system -g 802 wso2
+useradd --system -g 802 -u 802 wso2carbon
+```
   
 ## Quick Start Guide
 
@@ -30,25 +46,29 @@ git clone https://github.com/wso2/kubernetes-sp.git
 
 ##### 2. Provide configurations.
 
-1. The default product configurations are available at `<HELM_HOME>/pattern-distributed-conf/confs` folder. Change the 
+a. The default product configurations are available at `<HELM_HOME>/pattern-distributed-conf/confs` folder. Change the 
 configurations as necessary.
 
-2. Open the `<HELM_HOME>/pattern-distributed-conf/values.yaml` and provide the following values.
+b. Open the `<HELM_HOME>/pattern-distributed-conf/values.yaml` and provide the following values.
 
-    `username`: Your WSO2 username<br>
-    `password`: Your WSO2 password<br>
-    `email`: Docker email<br>
-    `namespace`: Kubernetes Namespace in which the resources are deployed<br>
-    `svcaccount`: Kubernetes Service Account in the `namespace` to which product instance pods are attached<br>
-    `serverIp`: NFS Server IP<br>
-    `locationPath`: NFS location path<br>
-    `sharedSiddhiFilesLocationPath`: NFS location path for shared Siddhi file directory(`<SP_HOME>/deployment/siddhi-files/`)<br> 
-   
-3. Open the `<HELM_HOME>/pattern-distributed-deployment/values.yaml` and provide the following values.
+| Parameter                       | Description                                                                               |
+|---------------------------------|-------------------------------------------------------------------------------------------|
+| `username`                      | Your WSO2 username                                                                        |
+| `password`                      | Your WSO2 password                                                                        |
+| `email`                         | Docker email                                                                              |
+| `namespace`                     | Kubernetes Namespace in which the resources are deployed                                  |
+| `svcaccount`                    | Kubernetes Service Account in the `namespace` to which product instance pods are attached |
+| `serverIp`                      | NFS Server IP                                                                             |
+| `locationPath`                  | NFS location path                                                                         |
+| `sharedSiddhiFilesLocationPath` | NFS location path for shared Siddhi file directory(`<SP_HOME>/deployment/siddhi-files/`)  |
 
-    `namespace`: Kubernetes Namespace in which the resources are deployed<br>
-    `svcaccount`: Kubernetes Service Account in the `namespace` to which product instance pods are attached<br>
+c. Open the `<HELM_HOME>/pattern-distributed-deployment/values.yaml` and provide the following values. 
     
+| Parameter                       | Description                                                                               |
+|---------------------------------|-------------------------------------------------------------------------------------------|
+| `namespace`                     | Kubernetes Namespace in which the resources are deployed                                  |
+| `svcaccount`                    | Kubernetes Service Account in the `namespace` to which product instance pods are attached |
+
 ##### 3. Deploy the configurations.
 
 ```
@@ -57,7 +77,7 @@ helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed-conf
 
 ##### 4. Deploy MySQL.
 
-If there is an external product database(s), add those configurations as stated at `step 2.1`. Otherwise, run the below
+If there is an external product database(s), add those configurations as stated at `step 2.a`. Otherwise, run the below
 command to create the product database.
  
 ```

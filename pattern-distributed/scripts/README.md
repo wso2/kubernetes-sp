@@ -1,7 +1,13 @@
-# WSO2 Stream Processor 4.2.0 Distributed Deployment Kubernetes Resources
+# Kubernetes Test Resources for a Fully Distributed Deployment of WSO2 Stream Processor
 
 Kubernetes Test Resources for a [fully distributed deployment of WSO2 Stream Processor](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment) contain artifacts,
 which can be used to test the core Kubernetes resources provided for a fully distributed deployment of WSO2 Stream Processor.
+
+## Contents
+
+* [Prerequisites](#prerequisites)
+* [Quick Start Guide](#quick-start-guide)
+* [How to update configurations](#how-to-update-configurations)
 
 ## Prerequisites
 
@@ -11,86 +17,86 @@ WSO2 subscription already, you can sign up for a WSO2 Free Trial Subscription fr
 * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 in order to run the steps provided in the following quick start guide.<br><br>
 
-* An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/)<br><br>
+* An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/).<br><br>
 
-* Network File System (NFS) is used as the persistent volume for Stream Processor manager nodes. Therefore setting up NFS is required to deploy the pattern.
-  Complete the following: 
-   
-     1. Update the NFS server IP in `<KUBERNETES_HOME>/pattern-distributed/artifacts/volumes/persistent-volumes.yaml`
-     2. Create required directories in NFS server as mentioned in `KUBERNETES_HOME/pattern-distributed/artifacts/volumes/persistent-volumes.yaml`
-        e.g. create directories as `/data/pattern-distributed/siddhi-files`<br><br>
-      
-* It is recommended to use a MySQL or any database cluster in a production environment. A single MySQL container is used with host path mount in these deployments.
-
-## Quick Start Guide
-
->In the context of this document, `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-sp`](https://github.com/wso2/kubernetes-sp/)
-Git repository.<br>
-
-##### 1. Clone Kubernetes Resources for WSO2 Stream Processor Git repository:
-
-```
-git clone https://github.com/wso2/kubernetes-sp.git
-
-```
-##### 2. Deploy Kubernetes Ingress resource:
-
-The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
-
-In order to enable the NGINX Ingress controller in the desired cloud or on-premise environment,
-please refer the official documentation, [NGINX Ingress Controller Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
-
-##### 3. Setup a Network File System (NFS) to be used as the persistent volume for artifact sharing across Stream Processor instances.
-
-Update the NFS server IP (`NFS_SERVER_IP`) and export path (`NFS_LOCATION_PATH`) of the following persistent volume resources
-defined in the `<KUBERNETES_HOME>/pattern-distributed/volumes/persistent-volumes.yaml` file.
-
-* `sp-manager-siddhi-files-pv`
-
-Create a Linux system user account named `wso2carbon` with user id `802` and a system group named `wso2` with group id `802` in the NFS node.
-Add `wso2carbon` user to the group `wso2`.
+* A pre-configured Network File System (NFS) to be used as the persistent volume for artifact sharing and persistence.
+In the NFS server instance, create a Linux system user account named `wso2carbon` with user id `802` and a system group named `wso2` with group id `802`.
+Add the `wso2carbon` user to the group `wso2`.
 
 ```
 groupadd --system -g 802 wso2
 useradd --system -g 802 -u 802 wso2carbon
 ```
 
-Then, grant ownership of the exported folder `NFS_LOCATION_PATH` (used for artifact sharing) to `wso2carbon` user and `wso2` group.
-And grant read-write-execute permissions to owning `wso2carbon` user, for the folder `NFS_LOCATION_PATH`.
+## Quick Start Guide
+
+>In the context of this document, `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-sp`](https://github.com/wso2/kubernetes-sp/)
+Git repository.<br>
+
+##### 1. Clone Kubernetes Resources for WSO2 Stream Processor Git repository.
 
 ```
-sudo chown -R wso2carbon:wso2 NFS_LOCATION_PATH
-chmod -R 700 NFS_LOCATION_PATH
+git clone https://github.com/wso2/kubernetes-sp.git
 ```
 
-##### 4. Setup and configure external product database(s):
+##### 2. Deploy Kubernetes Ingress resource.
+
+The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
+
+In order to enable the NGINX Ingress controller in the desired cloud or on-premise environment,
+please refer the official documentation, [NGINX Ingress Controller Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
+
+##### 3. Setup a Network File System (NFS) to be used for persistent storage.
+
+Create and export unique directories within the NFS server instance for each Kubernetes Persistent Volume resource defined in the
+`<KUBERNETES_HOME>/pattern-distributed/volumes/persistent-volumes.yaml` file.
+
+Grant ownership to `wso2carbon` user and `wso2` group, for each of the previously created directories.
+
+```
+sudo chown -R wso2carbon:wso2 <directory_name>
+```
+
+Grant read-write-execute permissions to the `wso2carbon` user, for each of the previously created directories.
+
+```
+chmod -R 700 <directory_name>
+```
+
+Update each Kubernetes Persistent Volume resource with the corresponding NFS server IP (`NFS_SERVER_IP`) and exported, NFS server directory path (`NFS_LOCATION_PATH`).
+
+##### 4. Setup product database(s).
 
 For **evaluation purposes**,
 
-* You can use Kubernetes resources provided in the directory `KUBERNETES_HOME/pattern-distributed/extras/rdbms/mysql`
+* You can use Kubernetes resources provided in the directory `<KUBERNETES_HOME>/pattern-distributed/extras/rdbms/mysql`
 for deploying the product databases, using MySQL in Kubernetes. However, this approach of product database deployment is
 **not recommended** for a production setup.
 
 * For using these Kubernetes resources,
 
-    Setup a Network File System (NFS) to be used as the persistent volume for persisting MySQL DB data.
-    Provide read-write-executable permissions to `other` users, for the folder `NFS_LOCATION_PATH`.
-    Update the NFS server IP (`NFS_SERVER_IP`) and export path (`NFS_LOCATION_PATH`) of persistent volume resource
-    named `sp-mysql-pv` in the file `<KUBERNETES_HOME>/pattern-distributed/extras/rdbms/volumes/persistent-volumes.yaml`.
-    
-In a **production setup**,
+  Here, a Network File System (NFS) is needed to be used for persisting MySQL DB data.    
+  
+  Create and export a directory within the NFS server instance.
+        
+  Provide read-write-execute permissions to other users for the created folder.
+        
+  Update the Kubernetes Persistent Volume resource with the corresponding NFS server IP (`NFS_SERVER_IP`) and exported,
+  NFS server directory path (`NFS_LOCATION_PATH`) in `<KUBERNETES_HOME>/pattern-distributed/extras/rdbms/volumes/persistent-volumes.yaml`.
+  
+In a **production grade setup**,
 
 * Setup the external product databases. Please refer to WSO2's official documentation [1](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment) on creating the required databases for the deployment.
   
   Provide appropriate connection URLs, corresponding to the created external databases and the relevant driver class names for the data sources defined in
-  the following files under wso2.datasources configurations:
+  the following files under `wso2.datasources` configurations:
   
-  * `KUBERNETES_HOME/pattern-distributed/confs/sp-manager/conf/deployment.yaml`
-  * `KUBERNETES_HOME/pattern-distributed/confs/sp-worker/conf/deployment.yaml`
+  * `<KUBERNETES_HOME>/pattern-distributed/confs/sp-manager/conf/deployment.yaml`
+  * `<KUBERNETES_HOME>/pattern-distributed/confs/sp-worker/conf/deployment.yaml`
 
-  Please refer WSO2's [official documentation](https://docs.wso2.com/display/ADMIN44x/Configuring+master-datasources.xml) on configuring data sources.
+  Please refer WSO2's [official documentation](https://docs.wso2.com/display/SP420/Configuring+Datasources) on configuring data sources.
 
-##### 5. Deploy Kubernetes resources:
+##### 5. Deploy Kubernetes resources.
 
 Change directory to `KUBERNETES_HOME/sp-distributed/scripts` and execute the `deploy.sh` shell script on the terminal, with the appropriate configurations as follows:
 
@@ -110,7 +116,7 @@ The following details need to be replaced in the relevant command.
 
 >To un-deploy, be on the same directory and execute the `undeploy.sh` shell script on the terminal.
 
-##### 6. Update /etc/hosts:
+##### 6. Access Management Consoles.
 
 Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses (using `kubectl get ing`).
 
@@ -131,13 +137,12 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 <EXTERNAL-IP>	wso2sp-manager-2
 ```
 
-3. Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
-
-##### 7. Siddhi applications should be deployed to the manager cluster using one of the following methods:
+##### 7. Siddhi applications should be deployed to the manager cluster using one of the following methods.
 
 a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
 
-b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below. Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP400/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
+b. Sending a "POST" request to `http://<host>:<port>/siddhi-apps`, with the Siddhi App attached as a file in the request as shown in the example below.
+Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP420/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
 
 ```
 curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k
@@ -147,3 +152,108 @@ Default deployment will expose two publicly accessible hosts, namely: <br>
 
 1. `wso2sp-manager-1` - To expose Manager Node 1 <br>
 2. `wso2sp-manager-2` - To expose Manager Node 2 <br>
+
+##### 8. Access Status Dashboard.
+
+Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
+
+## How to update configurations
+
+Kubernetes resources for WSO2 products use Kubernetes [ConfigMaps](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/)
+to pass on the minimum set of configurations required to setup a product deployment pattern.
+
+The minimum set of configurations required to setup a fully distributed deployment of WSO2 Stream Processor can be found
+in `<KUBERNETES_HOME>/pattern-distributed/confs` directory.
+
+If you intend to pass on any additional files with configuration changes, third-party libraries, OSGi bundles and security
+related artifacts to the Kubernetes cluster, you may mount the desired content to `/home/wso2carbon/wso2-server-volume` directory path within
+a WSO2 product Docker container.
+
+The following example depicts how this can be achieved when passing additional configurations to WSO2 Stream Processor Manager deployment:
+
+a. In order to apply the updated configurations, WSO2 product server instances need to be restarted. Hence, un-deploy all the Kubernetes resources
+corresponding to the product deployment, if they are already deployed.
+
+To un-deploy, move to `<KUBERNETES_HOME>/pattern-distributed/confs/scripts` and execute the `undeploy.sh` shell script on the terminal.
+
+b. Create and export a directory within the NFS server instance.
+   
+c. Add the additional configuration files, third-party libraries, OSGi bundles and security related artifacts, into appropriate
+folders matching that of the relevant WSO2 product home folder structure, within the previously created directory.
+
+d. Grant ownership to `wso2carbon` user and `wso2` group, for the directory created in step (b).
+      
+   ```
+   sudo chown -R wso2carbon:wso2 <directory_name>
+   ```
+      
+e. Grant read-write-execute permissions to the `wso2carbon` user, for the directory created in step (b).
+      
+   ```
+   chmod -R 700 <directory_name>
+   ```
+
+f. Map the directory created in step (b) to a Kubernetes [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+in the `<KUBERNETES_HOME>/pattern-distributed/volumes/persistent-volumes.yaml` file. For example, append the following entry to the file:
+
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sp-fully-distributed-additional-config-pv
+  labels:
+    purpose: sp-additional-configs
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: <NFS_SERVER_IP>
+    path: "<NFS_LOCATION_PATH>"
+```
+
+Provide the appropriate `NFS_SERVER_IP` and `NFS_LOCATION_PATH`.
+
+g. Create a Kubernetes Persistent Volume Claim to bind with the Kubernetes Persistent Volume created in step e. For example, append the following entry
+to the file `<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-mgt-volume-claim.yaml`:
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sp-fully-distributed-additional-config-volume-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""
+  selector:
+    matchLabels:
+      purpose: sp-additional-configs
+```
+
+h. Update the appropriate Kubernetes [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) resource(s).
+For example in the discussed scenario, update the volumes (`spec.template.spec.volumes`) and volume mounts (`spec.template.spec.containers[wso2sp-manager-{node-number}].volumeMounts`) in
+`<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-manager-1-deployment.yaml` and `<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-manager-2-deployment.yaml` files
+as follows:
+
+```
+
+volumeMounts:
+...
+- name: sp-additional-config-storage-volume
+  mountPath: "/home/wso2carbon/wso2-server-volume"
+
+volumes:
+...
+- name: sp-additional-config-storage-volume
+  persistentVolumeClaim:
+    claimName: sp-fully-distributed-additional-config-volume-claim
+    
+```
+
+i. Deploy the Kubernetes resources as defined in section **Quick Start Guide**.
