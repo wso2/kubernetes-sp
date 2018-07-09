@@ -26,10 +26,10 @@ steps provided in the following quick start guide.<br><br>
 In the NFS server instance, create a Linux system user account named `wso2carbon` with user id `802` and a system group named `wso2` with group id `802`.
 Add the `wso2carbon` user to the group `wso2`.
 
-```
-groupadd --system -g 802 wso2
-useradd --system -g 802 -u 802 wso2carbon
-```
+  ```
+   groupadd --system -g 802 wso2
+   useradd --system -g 802 -u 802 wso2carbon
+  ```
   
 ## Quick Start Guide
 
@@ -40,11 +40,30 @@ Git repository. <br>
 
 ##### 1. Clone Kubernetes Resources for WSO2 Stream Processor Git repository.
 
-```
-git clone https://github.com/wso2/kubernetes-sp.git
-```
+  ```
+  git clone https://github.com/wso2/kubernetes-sp.git
+  ```
+  
+##### 2. Setup a Network File System (NFS) to be used for persistent storage.
 
-##### 2. Provide configurations.
+Create and export unique directories within the NFS server instance for each of the following Kubernetes Persistent Volume
+resources defined in the `<HELM_HOME>/pattern-distributed-conf/values.yaml` file:
+
+* `sharedSiddhiFilesLocationPath`
+
+Grant ownership to `wso2carbon` user and `wso2` group, for each of the previously created directories.
+
+  ```
+  sudo chown -R wso2carbon:wso2 <directory_name>
+  ```
+
+Grant read-write-execute permissions to the `wso2carbon` user, for each of the previously created directories.
+
+  ```
+  chmod -R 700 <directory_name>
+  ```
+
+##### 3. Provide configurations.
 
 a. The default product configurations are available at `<HELM_HOME>/pattern-distributed-conf/confs` folder. Change the 
 configurations as necessary.
@@ -69,69 +88,70 @@ c. Open the `<HELM_HOME>/pattern-distributed-deployment/values.yaml` and provide
 | `namespace`                     | Kubernetes Namespace in which the resources are deployed                                  |
 | `svcaccount`                    | Kubernetes Service Account in the `namespace` to which product instance pods are attached |
 
-##### 3. Deploy the configurations.
+##### 4. Deploy the configurations.
 
-```
-helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed-conf
-```
+  ```
+  helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed-conf
+  ```
 
-##### 4. Deploy MySQL.
+##### 5. Deploy product database(s) using MySQL in Kubernetes.
 
-If there is an external product database(s), add those configurations as stated at `step 2.a`. Otherwise, run the below
-command to create the product database.
- 
-```
-helm install --name sp-rdbms -f <HELM_HOME>/mysql/values.yaml 
-stable/mysql --namespace <NAMESPACE>
-```
+  ```
+  helm install --name sp-rdbms -f <HELM_HOME>/mysql/values.yaml stable/mysql --namespace <NAMESPACE>
+  ```
+  
+  `NAMESPACE` should be same as `step 3.b`.
+  
+  For a serious deployment (e.g. production grade setup), it is recommended to connect product instances to a user owned and managed RDBMS instance.
 
-`NAMESPACE` should be the same as that of `step 2.2`.
+##### 6. Deploy the fully distributed deployment of WSO2 Stream Processor.
 
-##### 5. Deploy the fully distributed deployment of WSO2 Stream Processor.
+  ```
+  helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed-deployment
+  ```
+  
+##### 7. Access Management Consoles.
 
-```
-helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed-deployment
-```
+a. Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses.
 
-##### 6. Access Management Console:
+  ```
+  kubectl get ing -n <NAMESPACE>
+  ```
 
-Default deployment will expose three publicly accessible hosts, namely:<br>
+  e.g.
 
-1. `wso2sp-manager-1` - To expose Manager Node 1 <br>
-2. `wso2sp-manager-2` - To expose Manager Node 2 <br>
-3. `wso2sp-dashboard` - To expose Dashboard Node <br>
+  ```
+  NAME                                             HOSTS                     ADDRESS        PORTS     AGE
+  wso2sp-dashboard-ingress                         wso2sp-dashboard          <EXTERNAL-IP>  80, 443   2m
+  wso2sp-manager-1-ingress                         wso2sp-manager-1          <EXTERNAL-IP>  80, 443   2m
+  wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTERNAL-IP>  80, 443   2m
+  ```
 
+b. Add the above host as an entry in /etc/hosts file as follows:
 
-To access the console in a test environment,
+  ```
+  <EXTERNAL-IP>	wso2sp-dashboard
+  <EXTERNAL-IP>	wso2sp-manager-1
+  <EXTERNAL-IP>	wso2sp-manager-2
+  ```
 
-1. Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses (using `kubectl get ing -n <NAMESPACE>`).
-
-e.g.
-
-```
-NAME                            HOSTS              ADDRESS         PORTS     AGE
-wso2sp-dashboard-ingress        wso2sp-dashboard   <EXTERNAL-IP>   80, 443   25m
-wso2sp-manager-1-ingress        wso2sp-manager-1   <EXTERNAL-IP>   80, 443   25m
-wso2sp-manager-2-ingress        wso2sp-manager-2   <EXTERNAL-IP>   80, 443   25m
-```
-
-2. Add the above three hosts as entries in /etc/hosts file as follows:
-
-```
-<EXTERNAL-IP>	wso2sp-dashboard
-<EXTERNAL-IP>	wso2sp-manager-1
-<EXTERNAL-IP>	wso2sp-manager-2
-```
-
-3. Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
-
-##### 7. Siddhi applications should be deployed to the manager cluster using one of the following methods:
+##### 8. Siddhi applications should be deployed to the manager cluster using one of the following methods.
 
 a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
 
-b. Sending a "POST" request to http://\<host\>:\<port\>/siddhi-apps, with the Siddhi App attached as a file in the request as shown in the example below.
+b. Sending a "POST" request to `http://<host>:<port>/siddhi-apps`, with the Siddhi App attached as a file in the request as shown in the example below.
 Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP420/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
 
-```
-curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k
-```
+  ```
+  curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k
+  ```
+
+Default deployment will expose two publicly accessible hosts, namely: <br>
+
+* `wso2sp-manager-1` - To expose Manager Node 1 <br>
+* `wso2sp-manager-2` - To expose Manager Node 2 <br>
+
+##### 9. Access Status Dashboard.
+
+Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
+
