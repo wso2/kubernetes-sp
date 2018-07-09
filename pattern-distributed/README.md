@@ -14,7 +14,7 @@ Core Kubernetes resources for a [fully distributed deployment of WSO2 Stream Pro
 * In order to use WSO2 Kubernetes resources, you need an active WSO2 subscription. If you do not possess an active
 WSO2 subscription already, you can sign up for a WSO2 Free Trial Subscription from [here](https://wso2.com/free-trial-subscription).<br><br>
 
-* Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (compatible with v1.10)
 in order to run the steps provided in the following quick start guide.<br><br>
 
 * An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/).<br><br>
