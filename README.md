@@ -5,6 +5,13 @@ This repository contains Kubernetes resources required for,
 
 * [A fully distributed deployment of WSO2 Stream Processor](pattern-distributed)
 
+## Deploy Kubernetes resources
+
+In order to deploy Kubernetes resources for each deployment pattern, follow the **Quick Start Guide**s for each deployment pattern
+given below:
+
+* [A fully distributed deployment of WSO2 Stream Processor](pattern-distributed/README.md)
+
 ## How to update configurations
 
 Kubernetes resources for WSO2 products use Kubernetes [ConfigMaps](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/)
