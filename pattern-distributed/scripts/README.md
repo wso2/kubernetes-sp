@@ -97,7 +97,7 @@ In a **production grade setup**,
 
 ##### 5. Deploy Kubernetes resources.
 
-Change directory to `KUBERNETES_HOME/sp-distributed/scripts` and execute the `deploy.sh` shell script on the terminal, with the appropriate configurations as follows:
+Change directory to `<KUBERNETES_HOME>/sp-distributed/scripts` and execute the `deploy.sh` shell script on the terminal, with the appropriate configurations as follows:
 
 ```
 ./deploy.sh --wso2-username=<WSO2_USERNAME> --wso2-password=<WSO2_PASSWORD> --cluster-admin-password=<K8S_CLUSTER_ADMIN_PASSWORD>
