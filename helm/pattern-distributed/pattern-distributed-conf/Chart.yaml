@@ -13,23 +13,7 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: sp-manager-siddhi-files-pv
-  annotations:
-      volume.beta.kubernetes.io/storage-class: ""
-  labels:
-    type: local
-    purpose: sp_mgt_deployment_dir
-    pattern: wso2sp-pattern-distributed
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
-  nfs:
-    # FIXME: use the right IP
-    #Example Path in NFS server: /data/pattern-distributed/siddhi-files
-    #server: <NFS-Server-IP>
-    #path: "<NFS_LOCATION_PATH>"
+appVersion: "1.0"
+description: A Helm chart for Stream Processor Fully Distributed Deployment configurations
+name: pattern-distributed-conf
+version: 1.0.0

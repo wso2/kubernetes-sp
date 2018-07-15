@@ -16,6 +16,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: wso2sp-worker
+  namespace: {{ .Values.namespace }}
   labels:
     app: wso2sp-worker
     node: wso2sp-worker
@@ -81,7 +82,7 @@ spec:
           periodSeconds: 20
       imagePullSecrets:
       - name: wso2creds
-      serviceAccountName: "wso2svcacct"
+      serviceAccountName: {{ .Values.svcaccount }}
       volumes:
       - name: sp-worker-conf
         configMap:

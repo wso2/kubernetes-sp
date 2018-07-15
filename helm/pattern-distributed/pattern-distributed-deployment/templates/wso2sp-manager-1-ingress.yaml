@@ -12,24 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: PersistentVolume
+apiVersion: extensions/v1beta1
+kind: Ingress
 metadata:
-  name: sp-manager-siddhi-files-pv
-  annotations:
-      volume.beta.kubernetes.io/storage-class: ""
+  name: wso2sp-manager-1-ingress
+  namespace: {{ .Values.namespace }}
   labels:
-    type: local
-    purpose: sp_mgt_deployment_dir
-    pattern: wso2sp-pattern-distributed
+    pattern: wso2apim-pattern-distributed
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
 spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
-  nfs:
-    # FIXME: use the right IP
-    #Example Path in NFS server: /data/pattern-distributed/siddhi-files
-    #server: <NFS-Server-IP>
-    #path: "<NFS_LOCATION_PATH>"
+  tls:
+  - hosts:
+    - wso2sp-manager-1
+  rules:
+  - host: wso2sp-manager-1
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wso2sp-manager-1
+          servicePort: 9543

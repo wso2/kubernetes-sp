@@ -11,25 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 apiVersion: v1
-kind: PersistentVolume
+kind: Service
 metadata:
-  name: sp-manager-siddhi-files-pv
-  annotations:
-      volume.beta.kubernetes.io/storage-class: ""
+  name: kafka-service
+  namespace: {{ .Values.namespace }}
   labels:
-    type: local
-    purpose: sp_mgt_deployment_dir
+    node: kafka
     pattern: wso2sp-pattern-distributed
 spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
-  nfs:
-    # FIXME: use the right IP
-    #Example Path in NFS server: /data/pattern-distributed/siddhi-files
-    #server: <NFS-Server-IP>
-    #path: "<NFS_LOCATION_PATH>"
+  ports:
+  - port: 9092
+    name: kafka-port
+    targetPort: 9092
+    protocol: TCP
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: kafka
+    tier: kafka
+    pattern: wso2sp-pattern-distributed
+  clusterIP: None

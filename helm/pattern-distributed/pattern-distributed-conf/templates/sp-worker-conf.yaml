@@ -13,23 +13,18 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: PersistentVolume
+kind: ConfigMap
 metadata:
-  name: sp-manager-siddhi-files-pv
-  annotations:
-      volume.beta.kubernetes.io/storage-class: ""
-  labels:
-    type: local
-    purpose: sp_mgt_deployment_dir
-    pattern: wso2sp-pattern-distributed
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
-  nfs:
-    # FIXME: use the right IP
-    #Example Path in NFS server: /data/pattern-distributed/siddhi-files
-    #server: <NFS-Server-IP>
-    #path: "<NFS_LOCATION_PATH>"
+  name: sp-worker-conf
+  namespace: {{ .Values.namespace }}
+data:
+  {{- $file := .Files }}
+  {{- range $path, $byte := .Files.Glob "confs/sp-worker/conf/*" }}
+  {{- $list := $path | splitList "/"}}
+  {{- $length := len $list }}
+  {{- $last := add $length -1 }}
+  {{ index $list $last }}: |-
+    {{- range $file.Lines $path }}
+    {{ . }}
+    {{- end }}
+  {{- end }}
