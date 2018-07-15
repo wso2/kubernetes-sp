@@ -282,9 +282,9 @@ cluster.config:
   # Deployment Configuration for Distributed Deployment
 deployment.config:
   type: distributed
-  httpsInterface:
+  httpInterface:
     host: ${NODE_ID}
-    port: 9543
+    port: 9090
   heartbeatInterval: 1000
   heartbeatMaxRetry: 2
   datasource: SP_MGT_DB           # define a mysql datasource in datasources and refer it from here.
