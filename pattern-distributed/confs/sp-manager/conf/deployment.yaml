@@ -23,7 +23,7 @@ wso2.carbon:
     # ports used by this server
   ports:
       # port offset
-    offset: 0
+    offset: ${OFFSET}
 
 wso2.transport.http:
   transportProperties:
@@ -45,7 +45,7 @@ wso2.transport.http:
     -
       id: "msf4j-https"
       host: "${NODE_IP}"
-      port: 9543
+      port: ${NODE_PORT}
       scheme: https
       keyStoreFile: "${carbon.home}/resources/security/wso2carbon.jks"
       keyStorePassword: wso2carbon
@@ -275,19 +275,19 @@ cluster.config:
   coordinationStrategyClass: org.wso2.carbon.cluster.coordinator.rdbms.RDBMSCoordinationStrategy
   strategyConfig:
     datasource: SP_MGT_DB     # define a mysql datasource configured to the shared database
-    heartbeatInterval: 500
-    heartbeatMaxRetry: 4
-    eventPollingInterval: 1000
+    heartbeatInterval: 200
+    heartbeatMaxRetry: 2
+    eventPollingInterval: 200
 
   # Deployment Configuration for Distributed Deployment
 deployment.config:
   type: distributed
   httpsInterface:
     host: ${NODE_ID}
-    port: 9543
+    port: ${NODE_PORT}
   heartbeatInterval: 1000
-  heartbeatMaxRetry: 2
+  heartbeatMaxRetry: 4
   datasource: SP_MGT_DB           # define a mysql datasource in datasources and refer it from here.
-  minResourceCount: 1
+  minResourceCount: 2
   bootstrapURLs: kafka-service:9092   # kafka urls
   zooKeeperURLs: zoo1:2181,zoo2:2181,zoo3:2181   # zookeeper urls

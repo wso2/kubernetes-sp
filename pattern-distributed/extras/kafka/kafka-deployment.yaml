@@ -34,6 +34,11 @@ spec:
       -
         image: wurstmeister/kafka
         name: kafka
+        resources:
+          limits:
+            memory: "1Gi"
+          requests:
+            memory: "1Gi"
         ports:
         - containerPort: 9092
         env:

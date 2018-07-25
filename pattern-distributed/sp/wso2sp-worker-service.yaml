@@ -27,8 +27,12 @@ spec:
       port: 9090
       protocol: TCP
     -
-      name: 'https'
+      name: 'https-1'
       port: 9543
+      protocol: TCP
+    -
+      name: 'https-2'
+      port: 9544
       protocol: TCP
 
   # label keys and values that must match in order to receive traffic for this service

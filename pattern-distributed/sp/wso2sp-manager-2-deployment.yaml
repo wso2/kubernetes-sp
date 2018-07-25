@@ -34,14 +34,26 @@ spec:
       -
         image: docker.wso2.com/wso2sp-manager:4.2.0
         name: wso2sp-manager-2
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "2Gi"
+          requests:
+            memory: "2Gi"
+        command: ['sh', '-c', sleep 40 && /home/wso2carbon/init.sh]
         env:
         -
           name: WSO2_SERVER_PROFILE
           value: "manager"
         -
+          name: OFFSET
+          value: "1"
+        -
           name: NODE_ID
           value: "wso2sp-manager-2"
+        -
+          name: NODE_PORT
+          value: "9544"
         -
           name: NODE_IP
           valueFrom:
@@ -53,7 +65,7 @@ spec:
           containerPort: 9090
           protocol: "TCP"
         -
-          containerPort: 9543
+          containerPort: 9544
           protocol: "TCP"
         -
           containerPort: 9711
@@ -71,20 +83,41 @@ spec:
         volumeMounts:
         - name: sp-manager-conf
           mountPath: "/home/wso2carbon/kubernetes-volumes/manager/conf/"
-        - name: sp-mgt-storage-volume
-          mountPath: "/home/wso2carbon/wso2sp-4.2.0/deployment/siddhi-files/"
+        - name: sp-manager-bin
+          mountPath: "/home/wso2carbon/kubernetes-volumes/manager/bin/"
+        #- name: sp-mgt-storage-volume
+        #  mountPath: "/home/wso2carbon/wso2sp-4.2.0/deployment/siddhi-files/"
         livenessProbe:
           tcpSocket:
-            port: 9543
+            port: 9544
           initialDelaySeconds: 300
           periodSeconds: 20
+        #livenessProbe:
+        #  exec:
+        #   command:
+        #   - /bin/bash
+        #   - -c
+        #   - nc -z localhost 9543
+        #  initialDelaySeconds: 100
+        #  periodSeconds: 20
+        #readinessProbe:
+        #  exec:
+        #   command:
+        #   - /bin/bash
+        #   - -c
+        #   - nc -z localhost 9543
+        #  initialDelaySeconds: 100
+        #  periodSeconds: 20
       imagePullSecrets:
       - name: wso2creds
       volumes:
       - name: sp-manager-conf
         configMap:
           name: sp-manager-conf
-      - name: sp-mgt-storage-volume
-        persistentVolumeClaim:
-          claimName: sp-mgt-volume-claim
+      - name: sp-manager-bin
+        configMap:
+          name: sp-manager-bin
+      #- name: sp-mgt-storage-volume
+      #  persistentVolumeClaim:
+      #    claimName: sp-mgt-volume-claim
       serviceAccountName: "wso2svcacct"

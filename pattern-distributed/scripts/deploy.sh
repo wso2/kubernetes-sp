@@ -81,12 +81,14 @@ ${KUBECTL} create --username=admin --password=${ADMIN_PASSWORD} -f ../../rbac/rb
 
 # volumes
 echo 'deploying persistence volumes ...'
-${KUBECTL} create -f ../volumes/persistent-volumes.yaml
+# ${KUBECTL} create -f ../volumes/persistent-volumes.yaml
 
 # Configuration Maps
 echo 'deploying config maps ...'
 ${KUBECTL} create configmap sp-manager-conf --from-file=../confs/sp-manager/conf/
+${KUBECTL} create configmap sp-manager-bin --from-file=../confs/sp-manager/bin/
 ${KUBECTL} create configmap sp-worker-conf --from-file=../confs/sp-worker/conf/
+${KUBECTL} create configmap sp-worker-bin --from-file=../confs/sp-worker/bin/
 ${KUBECTL} create configmap sp-dashboard-conf --from-file=../confs/status-dashboard/conf/
 ${KUBECTL} create configmap mysql-dbscripts --from-file=../extras/confs/mysql/dbscripts/
 
@@ -94,7 +96,7 @@ sleep 30s
 
 # databases
 echo 'deploying databases ...'
-${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-persistent-volume-claim.yaml
+# ${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-persistent-volume-claim.yaml
 ${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-service.yaml
 ${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-deployment.yaml
 
@@ -109,7 +111,7 @@ ${KUBECTL} create -f ../extras/kafka/kafka-deployment.yaml
 ${KUBECTL} create -f ../extras/kafka/kafka-service.yaml
 
 echo 'deploying volume claims...'
-${KUBECTL} create -f ../sp/wso2sp-mgt-volume-claim.yaml
+# ${KUBECTL} create -f ../sp/wso2sp-mgt-volume-claim.yaml
 
 echo 'deploying Stream Processor manager profile and services...'
 ${KUBECTL} create -f ../sp/wso2sp-manager-1-service.yaml
@@ -123,7 +125,9 @@ sleep 30s
 
 echo 'deploying Stream Processor worker profile and services...'
 ${KUBECTL} create -f ../sp/wso2sp-worker-service.yaml
+${KUBECTL} create -f ../sp/wso2sp-receiver-service.yaml
 ${KUBECTL} create -f ../sp/wso2sp-worker-deployment.yaml
+${KUBECTL} create -f ../sp/wso2sp-receiver-deployment.yaml
 
 # deploying the ingress resource
 echo 'Deploying Ingress...'
