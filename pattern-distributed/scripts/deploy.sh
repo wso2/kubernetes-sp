@@ -96,7 +96,7 @@ sleep 30s
 
 # databases
 echo 'deploying databases ...'
-# ${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-persistent-volume-claim.yaml
+${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-persistent-volume-claim.yaml
 ${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-service.yaml
 ${KUBECTL} create -f ../extras/rdbms/mysql/rdbms-deployment.yaml
 

@@ -85,29 +85,13 @@ spec:
           mountPath: "/home/wso2carbon/kubernetes-volumes/manager/conf/"
         - name: sp-manager-bin
           mountPath: "/home/wso2carbon/kubernetes-volumes/manager/bin/"
-        #- name: sp-mgt-storage-volume
-        #  mountPath: "/home/wso2carbon/wso2sp-4.2.0/deployment/siddhi-files/"
+        - name: sp-mgt-storage-volume
+          mountPath: "/home/wso2carbon/wso2sp-4.2.0/deployment/siddhi-files/"
         livenessProbe:
           tcpSocket:
             port: 9544
           initialDelaySeconds: 300
           periodSeconds: 20
-        #livenessProbe:
-        #  exec:
-        #   command:
-        #   - /bin/bash
-        #   - -c
-        #   - nc -z localhost 9543
-        #  initialDelaySeconds: 100
-        #  periodSeconds: 20
-        #readinessProbe:
-        #  exec:
-        #   command:
-        #   - /bin/bash
-        #   - -c
-        #   - nc -z localhost 9543
-        #  initialDelaySeconds: 100
-        #  periodSeconds: 20
       imagePullSecrets:
       - name: wso2creds
       volumes:
@@ -117,7 +101,7 @@ spec:
       - name: sp-manager-bin
         configMap:
           name: sp-manager-bin
-      #- name: sp-mgt-storage-volume
-      #  persistentVolumeClaim:
-      #    claimName: sp-mgt-volume-claim
+      - name: sp-mgt-storage-volume
+        persistentVolumeClaim:
+          claimName: sp-mgt-volume-claim
       serviceAccountName: "wso2svcacct"
