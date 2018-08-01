@@ -31,5 +31,5 @@ spec:
   nfs:
     # FIXME: use the right IP
     #Example Path in NFS server: /data/pattern-distributed/siddhi-files
-    #server: 10.128.0.3
-    #path: "/data/distributed/"
+    #server: <NFS-Server-IP>
+    #path: "<NFS_LOCATION_PATH>"
