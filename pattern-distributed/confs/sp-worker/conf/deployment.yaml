@@ -210,7 +210,7 @@ data.agent.config:
 # This is the main configuration for metrics
 wso2.metrics:
   # Enable Metrics
-  enabled: true
+  enabled: false
   reporting:
     console:
       - # The name for the Console Reporter
