@@ -33,6 +33,11 @@ spec:
       - image: mysql:5.7
         name: sp-rdbms
         imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "1Gi"
+          requests:
+            memory: "1Gi"
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: root

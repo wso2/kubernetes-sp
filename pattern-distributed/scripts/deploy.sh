@@ -85,7 +85,9 @@ ${KUBECTL} create -f ../volumes/persistent-volumes.yaml
 
 # Configuration Maps
 echo 'deploying config maps ...'
+${KUBECTL} create configmap sp-manager-bin --from-file=../confs/sp-manager/bin/
 ${KUBECTL} create configmap sp-manager-conf --from-file=../confs/sp-manager/conf/
+${KUBECTL} create configmap sp-worker-bin --from-file=../confs/sp-worker/bin/
 ${KUBECTL} create configmap sp-worker-conf --from-file=../confs/sp-worker/conf/
 ${KUBECTL} create configmap sp-dashboard-conf --from-file=../confs/status-dashboard/conf/
 ${KUBECTL} create configmap mysql-dbscripts --from-file=../extras/confs/mysql/dbscripts/
@@ -123,7 +125,9 @@ sleep 30s
 
 echo 'deploying Stream Processor worker profile and services...'
 ${KUBECTL} create -f ../sp/wso2sp-worker-service.yaml
+${KUBECTL} create -f ../sp/wso2sp-receiver-service.yaml
 ${KUBECTL} create -f ../sp/wso2sp-worker-deployment.yaml
+${KUBECTL} create -f ../sp/wso2sp-receiver-deployment.yaml
 
 # deploying the ingress resource
 echo 'Deploying Ingress...'

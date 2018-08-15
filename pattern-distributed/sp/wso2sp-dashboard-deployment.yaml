@@ -34,6 +34,11 @@ spec:
       - image: docker.wso2.com/wso2sp-dashboard:4.2.0
         name: wso2sp-status-dashboard
         imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "1Gi"
+          requests:
+            memory: "1Gi"
         env:
         -
           name: WSO2_SERVER_PROFILE
