@@ -16,8 +16,13 @@
 # limitations under the License
 # ------------------------------------------------------------------------
 
+set -e
+
+ECHO=`which echo`
+KUBECTL=`which kubectl`
+
 echo 'Un-deploying Kubernetes Resources...'
-kubectl delete deployments,pod,services,PersistentVolume,PersistentVolumeClaim,rc,configmap,Ingress -l pattern=wso2sp-pattern-distributed -n wso2
+${KUBECTL} delete deployments,pod,services,PersistentVolume,PersistentVolumeClaim,rc,configmap,Ingress -l pattern=wso2sp-pattern-distributed -n wso2
 
 sleep 40s
 
@@ -25,6 +30,7 @@ sleep 40s
 ${KUBECTL} delete namespace wso2
 
 # switch the context to default namespace
-kubectl config set-context $(kubectl config current-context) --namespace=default
+${KUBECTL} config set-context $(kubectl config current-context) --namespace=default
 
 echo 'Finished'
+
