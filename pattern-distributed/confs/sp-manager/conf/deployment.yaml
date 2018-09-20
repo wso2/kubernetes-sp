@@ -36,15 +36,20 @@ wso2.transport.http:
     -
       name: "latency.metrics.enabled"
       value: true
-
+    -
+      name: "server.bootstrap.boss.group.size"
+      value: 20
+    -
+      name: "server.bootstrap.worker.group.size"
+      value: 20
   listenerConfigurations:
     -
       id: "default"
-      host: "${NODE_IP}"
+      host: "0.0.0.0"
       port: 9090
     -
       id: "msf4j-https"
-      host: "${NODE_IP}"
+      host: "0.0.0.0"
       port: ${NODE_PORT}
       scheme: https
       keyStoreFile: "${carbon.home}/resources/security/wso2carbon.jks"
@@ -101,7 +106,7 @@ databridge.config:
         sslPort: '9711'
         tcpReceiverThreadPoolSize: '100'
         sslReceiverThreadPoolSize: '100'
-        hostName: ${NODE_IP}
+        hostName: 0.0.0.0
 
   # Configuration of the Data Agents - to publish events through databridge
 data.agent.config:
@@ -243,8 +248,8 @@ wso2.datasources:
       type: RDBMS
       configuration:
         jdbcUrl: 'jdbc:mysql://sp-rdbms:3306/SP_MGT_DB?useSSL=false'
-        username: root
-        password: root
+        username: wso2carbon
+        password: wso2carbon
         driverClassName: com.mysql.jdbc.Driver
         maxPoolSize: 50
         idleTimeout: 60000

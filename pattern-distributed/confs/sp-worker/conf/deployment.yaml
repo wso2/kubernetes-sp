@@ -36,6 +36,12 @@ wso2.transport.http:
     -
       name: "latency.metrics.enabled"
       value: true
+    -
+      name: "server.bootstrap.boss.group.size"
+      value: 20
+    -
+      name: "server.bootstrap.worker.group.size"
+      value: 20
 
   listenerConfigurations:
     -
@@ -54,6 +60,32 @@ wso2.transport.http:
   senderConfigurations:
     -
       id: "http-sender"
+
+siddhi.stores.query.api:
+  transportProperties:
+    -
+      name: "server.bootstrap.socket.timeout"
+      value: 60
+    -
+      name: "client.bootstrap.socket.timeout"
+      value: 60
+    -
+      name: "latency.metrics.enabled"
+      value: true
+
+  listenerConfigurations:
+    -
+      id: "default"
+      host: "0.0.0.0"
+      port: 7070
+    -
+      id: "msf4j-https"
+      host: "0.0.0.0"
+      port: 7443
+      scheme: https
+      keyStoreFile: "${carbon.home}/resources/security/wso2carbon.jks"
+      keyStorePassword: wso2carbon
+      certPass: wso2carbon
 
   # Configuration used for the databridge communication
 databridge.config:
@@ -390,7 +422,6 @@ cluster.config:
   # Sample of deployment.config for Distributed deployment
 deployment.config:
   type: distributed
-  isReceiverNode: ${RECEIVER_NODE}
   httpsInterface:
     host: ${NODE_IP}
     port: ${NODE_PORT}

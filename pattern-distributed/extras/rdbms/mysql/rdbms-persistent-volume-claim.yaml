@@ -16,8 +16,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: sp-rdbms-volume-claim
-  annotations:
-    volume.beta.kubernetes.io/storage-class: ""
+#  annotations:
+#    volume.beta.kubernetes.io/storage-class: ""
   labels:
     app: sp-rdbms
     pattern: wso2sp-pattern-distributed
@@ -27,3 +27,4 @@ spec:
   resources:
     requests:
       storage: 20Gi
+  storageClassName: ""

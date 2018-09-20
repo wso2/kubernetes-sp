@@ -187,7 +187,7 @@ state.persistence:
   enabled: false
   intervalInMin: 1
   revisionsToKeep: 2
-  persistenceStore: org.wso2.carbon.stream.processor.core.persistence.FileSystemPersistenceStore
+  class: org.wso2.carbon.stream.processor.core.persistence.FileSystemPersistenceStore
   config:
     location: siddhi-app-persistence
 
@@ -371,17 +371,13 @@ wso2.business.rules.manager:
   # rule template wise configuration for deploying business rules
   deployment_configs:
     -
-     # <IP>:<HTTPS Port> of the Worker node
-     localhost:9443:
-       # UUIDs of rule templates that are needed to be deployed on the node
+     #ip:port of the node
+     localhost:9090:
+       # uuids of rule templates which are needed to be deployed on the node given above
        - stock-data-analysis
        - stock-exchange-input
        - stock-exchange-output
        - identifying-continuous-production-decrease
-       - popular-tweets-analysis
-       - http-analytics-processing
-       - message-tracing-source-template
-       - message-tracing-app-template
   # credentials for worker nodes
   username: admin
   password: admin

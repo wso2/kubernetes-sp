@@ -33,11 +33,14 @@ spec:
       - image: mysql:5.7
         name: sp-rdbms
         imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 999
         resources:
           limits:
             memory: "1Gi"
           requests:
             memory: "1Gi"
+        args: ["--max-connections", "10000"]
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: root
@@ -53,16 +56,15 @@ spec:
         volumeMounts:
         - name: mysql-dbscripts
           mountPath: /docker-entrypoint-initdb.d
-        args: ["--max-connections", "10000"]
-       #- name: sp-rdbms-persistent-storage
-       #  mountPath: /var/lib/mysql
+        - name: sp-rdbms-persistent-storage
+          mountPath: /var/lib/mysql
       serviceAccountName: "wso2svcacct"
       volumes:
       - name: mysql-dbscripts
         configMap:
           name: mysql-dbscripts
-#      - name: sp-rdbms-persistent-storage
-#        persistentVolumeClaim:
-#         claimName: sp-rdbms-volume-claim
+      - name: sp-rdbms-persistent-storage
+        persistentVolumeClaim:
+         claimName: sp-rdbms-volume-claim
 
 

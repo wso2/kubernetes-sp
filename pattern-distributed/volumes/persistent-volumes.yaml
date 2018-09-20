@@ -29,7 +29,5 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Recycle
   nfs:
-    # FIXME: use the right IP
-    #Example Path in NFS server: /data/pattern-distributed/siddhi-files
-    #server: <NFS-Server-IP>
-    #path: "<NFS_LOCATION_PATH>"
+    server: 10.128.0.6
+    path: "/data/thilina/sp"
