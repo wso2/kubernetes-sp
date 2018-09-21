@@ -27,7 +27,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Retain
   nfs:
     server: 10.128.0.6
     path: "/data/thilina/sp"
