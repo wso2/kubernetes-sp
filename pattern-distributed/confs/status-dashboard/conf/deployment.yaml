@@ -187,7 +187,7 @@ state.persistence:
   enabled: false
   intervalInMin: 1
   revisionsToKeep: 2
-  class: org.wso2.carbon.stream.processor.core.persistence.FileSystemPersistenceStore
+  persistenceStore: org.wso2.carbon.stream.processor.core.persistence.FileSystemPersistenceStore
   config:
     location: siddhi-app-persistence
 
@@ -378,6 +378,10 @@ wso2.business.rules.manager:
        - stock-exchange-input
        - stock-exchange-output
        - identifying-continuous-production-decrease
+       - popular-tweets-analysis
+       - http-analytics-processing
+       - message-tracing-source-template
+       - message-tracing-app-template
   # credentials for worker nodes
   username: admin
   password: admin
@@ -389,34 +393,6 @@ wso2.status.dashboard:
   workerAccessCredentials:
     username: 'admin'
     password: 'admin'
-  queries:
-    -
-     mappings:
-        tableCreateQuery:
-        foreignKeyQuery:
-        tableCheckQuery:
-        recordSelectQuery:
-        recordSelectAppMetricsQuery:
-        recordSelectAgregatedAppMetricsQuery:
-        recordSelectWorkerThroughputQuery:
-        recordSelectWorkerAggregateThroughputQuery:
-        recordSelectWorkerMetricsQuery:
-        recordSelectWorkerAggregateMetricsQuery:
-        recordInsertQuery:
-        recordDeleteQuery:
-        selectAppComponentList:
-        selectAppComponentMetrics:
-        selectAppComponentHistory:
-        selectAppComponentAggregatedHistory:
-        doubleType:
-        floatType:
-        integerType:
-        longType:
-        stringType:
-        booleanType:
-
-     type: default
-     version: default
 
 wso2.transport.http:
   transportProperties:

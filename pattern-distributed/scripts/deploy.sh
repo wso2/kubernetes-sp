@@ -35,7 +35,7 @@ function usage () {
 
 WSO2_SUBSCRIPTION_USERNAME=''
 WSO2_SUBSCRIPTION_PASSWORD=''
-ADMIN_PASSWORD=
+ADMIN_PASSWORD=''
 
 # capture named arguments
 while [ "$1" != "" ]; do
@@ -74,7 +74,7 @@ ${KUBECTL} create serviceaccount wso2svcacct -n wso2
 # set namespace
 ${KUBECTL} config set-context $(${KUBECTL} config current-context) --namespace=wso2
 
-#${KUBECTL} create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=${WSO2_SUBSCRIPTION_USERNAME} --docker-password=${WSO2_SUBSCRIPTION_PASSWORD} --docker-email=${WSO2_SUBSCRIPTION_USERNAME}
+${KUBECTL} create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=${WSO2_SUBSCRIPTION_USERNAME} --docker-password=${WSO2_SUBSCRIPTION_PASSWORD} --docker-email=${WSO2_SUBSCRIPTION_USERNAME}
 
 # create Kubernetes Role and Role Binding necessary for the Kubernetes API requests made from Kubernetes membership scheme
 ${KUBECTL} create --username=admin --password=${ADMIN_PASSWORD} -f ../../rbac/rbac.yaml
