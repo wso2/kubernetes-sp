@@ -24,7 +24,7 @@ metadata:
 spec:
   strategy:
     type: Recreate
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -34,20 +34,35 @@ spec:
     spec:
       containers:
       -
-        image: docker.wso2.com/wso2sp-worker:4.2.0
+        image: docker.wso2.com/wso2sp-worker:4.3.0
         name: wso2sp-worker
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 802
+        resources:
+          limits:
+            memory: "2Gi"
+          requests:
+            memory: "2Gi"
+        command: ['sh', '-c', sleep 40 && /home/wso2carbon/init.sh]
         env:
         -
           name: WSO2_SERVER_PROFILE
           value: "worker"
         -
+          name: OFFSET
+          value: "0"
+        -
+          name: RECEIVER_NODE
+          value: "false"
+        -
           name: NODE_IP
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        - name: MY_POD_NAME
-          value: wso2sp-worker
+        -
+          name: NODE_PORT
+          value: "9443"
 
         ports:
         -
@@ -58,6 +73,9 @@ spec:
           protocol: "TCP"
         -
           containerPort: 9543
+          protocol: "TCP"
+        -
+          containerPort: 9544
           protocol: "TCP"
         -
           containerPort: 9711
@@ -71,13 +89,20 @@ spec:
         -
           containerPort: 7611
           protocol: "TCP"
-
+        -
+          containerPort: 7070
+          protocol: "TCP"
+        -
+          containerPort: 7443
+          protocol: "TCP"
         volumeMounts:
         - name: sp-worker-conf
-          mountPath: "/home/wso2carbon/kubernetes-volumes/worker/conf/"
+          mountPath: "/home/wso2carbon/wso2-config-volume/conf/worker/"
+        - name: sp-worker-bin
+          mountPath: "/home/wso2carbon/kubernetes-volumes/worker/bin/"
         livenessProbe:
           tcpSocket:
-            port: 9443
+            port: 9090
           initialDelaySeconds: 300
           periodSeconds: 20
       imagePullSecrets:
@@ -87,3 +112,6 @@ spec:
       - name: sp-worker-conf
         configMap:
           name: sp-worker-conf
+      - name: sp-worker-bin
+        configMap:
+          name: sp-worker-bin
