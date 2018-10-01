@@ -23,7 +23,7 @@ wso2.carbon:
     # ports used by this server
   ports:
       # port offset
-    offset: 0
+    offset: ${OFFSET}
 
 wso2.transport.http:
   transportProperties:
@@ -36,16 +36,21 @@ wso2.transport.http:
     -
       name: "latency.metrics.enabled"
       value: true
-
+    -
+      name: "server.bootstrap.boss.group.size"
+      value: 20
+    -
+      name: "server.bootstrap.worker.group.size"
+      value: 20
   listenerConfigurations:
     -
       id: "default"
-      host: "${NODE_IP}"
+      host: "0.0.0.0"
       port: 9090
     -
       id: "msf4j-https"
-      host: "${NODE_IP}"
-      port: 9543
+      host: "0.0.0.0"
+      port: ${NODE_PORT}
       scheme: https
       keyStoreFile: "${carbon.home}/resources/security/wso2carbon.jks"
       keyStorePassword: wso2carbon
@@ -101,7 +106,7 @@ databridge.config:
         sslPort: '9711'
         tcpReceiverThreadPoolSize: '100'
         sslReceiverThreadPoolSize: '100'
-        hostName: ${NODE_IP}
+        hostName: 0.0.0.0
 
   # Configuration of the Data Agents - to publish events through databridge
 data.agent.config:
@@ -243,8 +248,8 @@ wso2.datasources:
       type: RDBMS
       configuration:
         jdbcUrl: 'jdbc:mysql://sp-rdbms-mysql:3306/SP_MGT_DB?useSSL=false'
-        username: root
-        password: root
+        username: wso2carbon
+        password: wso2carbon
         driverClassName: com.mysql.jdbc.Driver
         maxPoolSize: 50
         idleTimeout: 60000
@@ -275,19 +280,19 @@ cluster.config:
   coordinationStrategyClass: org.wso2.carbon.cluster.coordinator.rdbms.RDBMSCoordinationStrategy
   strategyConfig:
     datasource: SP_MGT_DB     # define a mysql datasource configured to the shared database
-    heartbeatInterval: 500
-    heartbeatMaxRetry: 4
-    eventPollingInterval: 1000
+    heartbeatInterval: 200
+    heartbeatMaxRetry: 2
+    eventPollingInterval: 200
 
   # Deployment Configuration for Distributed Deployment
 deployment.config:
   type: distributed
   httpsInterface:
     host: ${NODE_ID}
-    port: 9543
+    port: ${NODE_PORT}
   heartbeatInterval: 1000
-  heartbeatMaxRetry: 2
+  heartbeatMaxRetry: 4
   datasource: SP_MGT_DB           # define a mysql datasource in datasources and refer it from here.
-  minResourceCount: 1
+  minResourceCount: 2
   bootstrapURLs: kafka-service:9092   # kafka urls
   zooKeeperURLs: zoo1:2181,zoo2:2181,zoo3:2181   # zookeeper urls

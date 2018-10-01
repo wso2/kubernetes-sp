@@ -28,7 +28,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Retain
   nfs:
     server: {{ .Values.serverIp }}
     path: {{ .Values.sharedSiddhiFilesLocationPath }}

@@ -129,7 +129,7 @@ b. Add the above host as an entry in /etc/hosts file as follows:
 a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
 
 b. Sending a "POST" request to `http://<host>:<port>/siddhi-apps`, with the Siddhi App attached as a file in the request as shown in the example below.
-Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP420/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
+Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP430/Stream+Processor+REST+API+Guide) for more information on using WSO2 Stream Processor APIs.
 
   ```
   curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k

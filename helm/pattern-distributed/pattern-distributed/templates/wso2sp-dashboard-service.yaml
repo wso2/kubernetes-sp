@@ -24,7 +24,7 @@ spec:
   ports:
     # ports that this service should serve on
     -
-      name: 'https'
+      name: 'https-port-1'
       port: 9643
       protocol: TCP
 

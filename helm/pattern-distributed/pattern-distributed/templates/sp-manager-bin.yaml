@@ -13,27 +13,18 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: wso2sp-manager-2
+  name: sp-manager-bin
   namespace: {{ .Values.namespace }}
-  labels:
-    node: wso2sp-manager-2
-    pattern: wso2sp-pattern-distributed
-spec:
-  ports:
-    # ports that this service should serve on
-    -
-      name: 'http-port-1'
-      port: 9090
-      protocol: TCP
-    -
-      name: 'https-port-1'
-      port: 9544
-      protocol: TCP
-
-  # label keys and values that must match in order to receive traffic for this service
-  selector:
-    node: wso2sp-manager-2
-    pattern: wso2sp-pattern-distributed
-  clusterIP: None
+data:
+  {{- $file := .Files }}
+  {{- range $path, $byte := .Files.Glob "confs/sp-manager/bin/*" }}
+  {{- $list := $path | splitList "/"}}
+  {{- $length := len $list }}
+  {{- $last := add $length -1 }}
+  {{ index $list $last }}: |-
+    {{- range $file.Lines $path }}
+    {{ . }}
+    {{- end }}
+  {{- end }}
