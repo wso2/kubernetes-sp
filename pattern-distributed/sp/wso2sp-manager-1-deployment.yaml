@@ -83,11 +83,11 @@ spec:
 
         volumeMounts:
         - name: sp-manager-conf
-          mountPath: "/home/wso2carbon/wso2-config-volume/conf/manager/"
+          mountPath: "/home/wso2carbon/wso2-config-volume/conf/manager"
         - name: sp-manager-bin
-          mountPath: "/home/wso2carbon/kubernetes-volumes/manager/bin/"
+          mountPath: "/home/wso2carbon/wso2-config-volume/wso2/manager/bin"
         - name: sp-mgt-storage-volume
-          mountPath: "/home/wso2carbon/wso2sp-4.3.0/deployment/siddhi-files/"
+          mountPath: "/home/wso2carbon/wso2sp-4.3.0/deployment/siddhi-files"
         livenessProbe:
           tcpSocket:
             port: 9543

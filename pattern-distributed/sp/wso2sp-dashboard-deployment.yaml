@@ -61,7 +61,7 @@ spec:
 
         volumeMounts:
         - name: sp-dashboard-conf
-          mountPath: "/home/wso2carbon/wso2-config-volume/conf/dashboard/"
+          mountPath: "/home/wso2carbon/wso2-config-volume/conf/dashboard"
         livenessProbe:
           tcpSocket:
             port: 9643

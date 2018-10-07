@@ -29,13 +29,11 @@ function usage () {
     echoBold "Allowed arguments:\n"
     echoBold "-h | --help"
     echoBold "--wu | --wso2-username\t\tYour WSO2 username"
-    echoBold "--wp | --wso2-password\t\tYour WSO2 password"
-    echoBold "--cap | --cluster-admin-password\tKubernetes cluster admin password\n\n"
+    echoBold "--wp | --wso2-password\t\tYour WSO2 password\n\n"
 }
 
 WSO2_SUBSCRIPTION_USERNAME=''
 WSO2_SUBSCRIPTION_PASSWORD=''
-ADMIN_PASSWORD=''
 
 # capture named arguments
 while [ "$1" != "" ]; do
@@ -52,9 +50,6 @@ while [ "$1" != "" ]; do
             ;;
         --wp | --wso2-password)
             WSO2_SUBSCRIPTION_PASSWORD=${VALUE}
-            ;;
-        --cap | --cluster-admin-password)
-            ADMIN_PASSWORD=${VALUE}
             ;;
         *)
             echoBold "ERROR: unknown parameter \"${PARAM}\""
@@ -77,7 +72,7 @@ ${KUBECTL} config set-context $(${KUBECTL} config current-context) --namespace=w
 ${KUBECTL} create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=${WSO2_SUBSCRIPTION_USERNAME} --docker-password=${WSO2_SUBSCRIPTION_PASSWORD} --docker-email=${WSO2_SUBSCRIPTION_USERNAME}
 
 # create Kubernetes Role and Role Binding necessary for the Kubernetes API requests made from Kubernetes membership scheme
-${KUBECTL} create --username=admin --password=${ADMIN_PASSWORD} -f ../../rbac/rbac.yaml
+${KUBECTL} create -f ../../rbac/rbac.yaml
 
 # volumes
 echo 'deploying persistence volumes ...'

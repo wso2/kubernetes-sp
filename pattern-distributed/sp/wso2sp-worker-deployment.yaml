@@ -96,9 +96,9 @@ spec:
           protocol: "TCP"
         volumeMounts:
         - name: sp-worker-conf
-          mountPath: "/home/wso2carbon/wso2-config-volume/conf/worker/"
+          mountPath: "/home/wso2carbon/wso2-config-volume/conf/worker"
         - name: sp-worker-bin
-          mountPath: "/home/wso2carbon/kubernetes-volumes/worker/bin/"
+          mountPath: "/home/wso2carbon/wso2-config-volume/wso2/worker/bin"
         livenessProbe:
           tcpSocket:
             port: 9090
