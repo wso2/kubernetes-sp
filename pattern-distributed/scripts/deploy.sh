@@ -82,6 +82,7 @@ ${KUBECTL} create --username=admin --password=${ADMIN_PASSWORD} -f ../../rbac/rb
 # volumes
 echo 'deploying persistence volumes ...'
 ${KUBECTL} create -f ../volumes/persistent-volumes.yaml
+${KUBECTL} create -f ../extras/rdbms/volumes/persistent-volumes.yaml
 
 # Configuration Maps
 echo 'deploying config maps ...'

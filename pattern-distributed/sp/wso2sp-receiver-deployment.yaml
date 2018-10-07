@@ -33,9 +33,11 @@ spec:
     spec:
       containers:
       -
-        image: docker.wso2.com/wso2sp-worker:4.2.0
+        image: docker.wso2.com/wso2sp-worker:4.3.0
         name: wso2sp-receiver
         imagePullPolicy: Always
+        securityContext:
+          runAsUser: 802
         resources:
           limits:
             memory: "2Gi"
@@ -86,15 +88,20 @@ spec:
         -
           containerPort: 7611
           protocol: "TCP"
-
+        -
+          containerPort: 7070
+          protocol: "TCP"
+        -
+          containerPort: 7443
+          protocol: "TCP"
         volumeMounts:
         - name: sp-worker-conf
-          mountPath: "/home/wso2carbon/kubernetes-volumes/worker/conf/"
+          mountPath: "/home/wso2carbon/wso2-config-volume/conf/worker/"
         - name: sp-worker-bin
           mountPath: "/home/wso2carbon/kubernetes-volumes/worker/bin/"
         livenessProbe:
           tcpSocket:
-            port: 9444
+            port: 9090
           initialDelaySeconds: 300
           periodSeconds: 20
       imagePullSecrets:

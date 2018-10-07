@@ -22,7 +22,7 @@ kubectl delete deployments,pod,services,PersistentVolume,PersistentVolumeClaim,r
 sleep 40s
 
 # delete the created Kubernetes Namespace
-${KUBECTL} delete namespace wso2
+kubectl delete namespace wso2
 
 # switch the context to default namespace
 kubectl config set-context $(kubectl config current-context) --namespace=default
