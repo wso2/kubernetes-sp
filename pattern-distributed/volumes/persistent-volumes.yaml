@@ -27,9 +27,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Retain
   nfs:
-    # FIXME: use the right IP
-    #Example Path in NFS server: /data/pattern-distributed/siddhi-files
-    #server: <NFS-Server-IP>
-    #path: "<NFS_LOCATION_PATH>"
+    server: "<NFS-Server-IP>"
+    path: "<NFS_LOCATION_PATH>"
