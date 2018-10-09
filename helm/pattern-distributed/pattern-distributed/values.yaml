@@ -1,0 +1,8 @@
+username: "<USERNAME>"
+password: "<PASSWORD>"
+email: "<EMAIL>"
+
+namespace: "wso2"
+svcaccount: "wso2svcacct"
+serverIp: "<SERVER_IP>"
+sharedSiddhiFilesLocationPath: "<NFS_LOCATION>"

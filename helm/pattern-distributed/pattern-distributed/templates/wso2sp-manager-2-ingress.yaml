@@ -12,27 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Service
+apiVersion: extensions/v1beta1
+kind: Ingress
 metadata:
-  name: wso2sp-manager-1
+  name: wso2sp-manager-2-ingress
+  namespace: {{ .Values.namespace }}
   labels:
-    node: wso2sp-manager-1
-    pattern: wso2sp-pattern-distributed
+    pattern: wso2apim-pattern-distributed
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
 spec:
-  ports:
-    # ports that this service should serve on
-    -
-      name: 'http-port-1'
-      port: 9090
-      protocol: TCP
-    -
-      name: 'https-port-1'
-      port: 9543
-      protocol: TCP
-
-  # label keys and values that must match in order to receive traffic for this service
-  selector:
-    node: wso2sp-manager-1
-    pattern: wso2sp-pattern-distributed
-  clusterIP: None
+  tls:
+  - hosts:
+    - wso2sp-manager-2
+  rules:
+  - host: wso2sp-manager-2
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wso2sp-manager-2
+          servicePort: 9544

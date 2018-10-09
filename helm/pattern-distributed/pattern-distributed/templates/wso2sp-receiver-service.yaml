@@ -15,9 +15,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wso2sp-worker
+  name: wso2sp-receiver
+  namespace: {{ .Values.namespace }}
   labels:
-    node: wso2sp-worker
+    node: wso2sp-receiver
     pattern: wso2sp-pattern-distributed
 spec:
   ports:
@@ -28,23 +29,15 @@ spec:
       protocol: TCP
     -
       name: 'https-port-1'
-      port: 9543
+      port: 9444
       protocol: TCP
     -
       name: 'https-port-2'
       port: 9544
       protocol: TCP
-    -
-      name: 'https-port-3'
-      port: 7070
-      protocol: TCP
-    -
-      name: 'https-port-4'
-      port: 7443
-      protocol: TCP
 
   # label keys and values that must match in order to receive traffic for this service
   selector:
-    node: wso2sp-worker
+    node: wso2sp-receiver
     pattern: wso2sp-pattern-distributed
   clusterIP: None

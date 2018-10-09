@@ -15,9 +15,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sp-rdbms-deployment
+  name: wso2sp-dashboard
+  namespace: {{ .Values.namespace }}
   labels:
-    app: sp-rdbms
+    app: wso2sp-dashboard
+    node: wso2sp-dashboard
     pattern: wso2sp-pattern-distributed
 spec:
   strategy:
@@ -25,46 +27,51 @@ spec:
   template:
     metadata:
       labels:
-        app: sp-rdbms
-        tier: sp-rdbms
+        app: wso2sp-dashboard
+        node: wso2sp-dashboard
         pattern: wso2sp-pattern-distributed
     spec:
       containers:
-      - image: mysql:5.7
-        name: sp-rdbms
+      - image: docker.wso2.com/wso2sp-dashboard:4.3.0
+        name: wso2sp-status-dashboard
         imagePullPolicy: IfNotPresent
         securityContext:
-          runAsUser: 999
+          runAsUser: 802
         resources:
           limits:
             memory: "1Gi"
           requests:
             memory: "1Gi"
-        args: ["--max-connections", "10000"]
         env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: root
-          - name: MYSQL_DATABASE
-            value: SP_MGT_DB
-          - name: MYSQL_USER
-            value: wso2carbon
-          - name: MYSQL_PASSWORD
-            value: wso2carbon
+        -
+          name: WSO2_SERVER_PROFILE
+          value: "dashboard"
+        -
+          name: NODE_ID
+          value: "wso2sp-status-dashboard"
+        -
+           name: NODE_IP
+           valueFrom:
+             fieldRef:
+               fieldPath: status.podIP
+
         ports:
-        - containerPort: 3306
-          name: sp-rdbms
+        -
+          containerPort: 9643
+          protocol: "TCP"
+
         volumeMounts:
-        - name: mysql-dbscripts
-          mountPath: /docker-entrypoint-initdb.d
-        - name: sp-rdbms-persistent-storage
-          mountPath: /var/lib/mysql
-      serviceAccountName: "wso2svcacct"
+        - name: sp-dashboard-conf
+          mountPath: "/home/wso2carbon/wso2-config-volume/conf/dashboard/"
+        livenessProbe:
+          tcpSocket:
+            port: 9643
+          initialDelaySeconds: 300
+          periodSeconds: 20
+      imagePullSecrets:
+            - name: wso2creds
       volumes:
-      - name: mysql-dbscripts
+      - name: sp-dashboard-conf
         configMap:
-          name: mysql-dbscripts
-      - name: sp-rdbms-persistent-storage
-        persistentVolumeClaim:
-         claimName: sp-rdbms-volume-claim
-
-
+          name: sp-dashboard-conf
+      serviceAccountName: {{ .Values.svcaccount }}

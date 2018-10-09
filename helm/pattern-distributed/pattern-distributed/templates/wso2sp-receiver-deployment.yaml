@@ -15,26 +15,27 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: wso2sp-worker
+  name: wso2sp-receiver
+  namespace: {{ .Values.namespace }}
   labels:
-    app: wso2sp-worker
-    node: wso2sp-worker
+    app: wso2sp-receiver
+    node: wso2sp-receiver
     pattern: wso2sp-pattern-distributed
 spec:
   strategy:
     type: Recreate
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
-        app: wso2sp-worker
-        node: wso2sp-worker
+        app: wso2sp-receiver
+        node: wso2sp-receiver
         pattern: wso2sp-pattern-distributed
     spec:
       containers:
       -
         image: docker.wso2.com/wso2sp-worker:4.3.0
-        name: wso2sp-worker
+        name: wso2sp-receiver
         imagePullPolicy: Always
         securityContext:
           runAsUser: 802
@@ -43,32 +44,32 @@ spec:
             memory: "2Gi"
           requests:
             memory: "2Gi"
-        command: ['sh', '-c', sleep 40 && /home/wso2carbon/init.sh]
+        command: ['sh', '-c', sleep 20 && /home/wso2carbon/init.sh]
         env:
         -
           name: WSO2_SERVER_PROFILE
           value: "worker"
         -
           name: OFFSET
-          value: "0"
-        -
-          name: RECEIVER_NODE
-          value: "false"
+          value: "1"
         -
           name: NODE_IP
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
         -
+          name: RECEIVER_NODE
+          value: "true"
+        -
           name: NODE_PORT
-          value: "9443"
+          value: "9444"
 
         ports:
         -
           containerPort: 9090
           protocol: "TCP"
         -
-          containerPort: 9443
+          containerPort: 9444
           protocol: "TCP"
         -
           containerPort: 9543
@@ -106,7 +107,7 @@ spec:
           periodSeconds: 20
       imagePullSecrets:
       - name: wso2creds
-      serviceAccountName: "wso2svcacct"
+      serviceAccountName: {{ .Values.svcaccount }}
       volumes:
       - name: sp-worker-conf
         configMap:

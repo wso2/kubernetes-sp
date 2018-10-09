@@ -35,4 +35,4 @@ spec:
       - path: /
         backend:
           serviceName: wso2sp-manager-2
-          servicePort: 9543
+          servicePort: 9544

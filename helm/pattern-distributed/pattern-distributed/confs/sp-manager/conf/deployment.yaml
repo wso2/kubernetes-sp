@@ -247,7 +247,7 @@ wso2.datasources:
     definition:
       type: RDBMS
       configuration:
-        jdbcUrl: 'jdbc:mysql://sp-rdbms:3306/SP_MGT_DB?useSSL=false'
+        jdbcUrl: 'jdbc:mysql://sp-rdbms-mysql:3306/SP_MGT_DB?useSSL=false'
         username: wso2carbon
         password: wso2carbon
         driverClassName: com.mysql.jdbc.Driver

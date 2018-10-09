@@ -13,26 +13,17 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: wso2sp-manager-1
+  name: sp-mgt-volume-claim
+  namespace: {{ .Values.namespace }}
   labels:
-    node: wso2sp-manager-1
-    pattern: wso2sp-pattern-distributed
+      app: wso2sp-manager
+      pattern: wso2sp-pattern-distributed
 spec:
-  ports:
-    # ports that this service should serve on
-    -
-      name: 'http-port-1'
-      port: 9090
-      protocol: TCP
-    -
-      name: 'https-port-1'
-      port: 9543
-      protocol: TCP
-
-  # label keys and values that must match in order to receive traffic for this service
-  selector:
-    node: wso2sp-manager-1
-    pattern: wso2sp-pattern-distributed
-  clusterIP: None
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""

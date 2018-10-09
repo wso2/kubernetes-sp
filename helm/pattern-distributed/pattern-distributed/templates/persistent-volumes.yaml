@@ -13,38 +13,22 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: Service
+kind: PersistentVolume
 metadata:
-  name: wso2sp-worker
+  name: sp-manager-siddhi-files-pv
+  namespace: {{ .Values.namespace }}
+  annotations:
+      volume.beta.kubernetes.io/storage-class: ""
   labels:
-    node: wso2sp-worker
+    type: local
+    purpose: sp_mgt_deployment_dir
     pattern: wso2sp-pattern-distributed
 spec:
-  ports:
-    # ports that this service should serve on
-    -
-      name: 'http-port-1'
-      port: 9090
-      protocol: TCP
-    -
-      name: 'https-port-1'
-      port: 9543
-      protocol: TCP
-    -
-      name: 'https-port-2'
-      port: 9544
-      protocol: TCP
-    -
-      name: 'https-port-3'
-      port: 7070
-      protocol: TCP
-    -
-      name: 'https-port-4'
-      port: 7443
-      protocol: TCP
-
-  # label keys and values that must match in order to receive traffic for this service
-  selector:
-    node: wso2sp-worker
-    pattern: wso2sp-pattern-distributed
-  clusterIP: None
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: {{ .Values.serverIp }}
+    path: {{ .Values.sharedSiddhiFilesLocationPath }}

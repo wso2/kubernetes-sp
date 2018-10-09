@@ -47,7 +47,7 @@ Git repository. <br>
 ##### 2. Setup a Network File System (NFS) to be used for persistent storage.
 
 Create and export unique directories within the NFS server instance for each of the following Kubernetes Persistent Volume
-resources defined in the `<HELM_HOME>/pattern-distributed-conf/values.yaml` file:
+resources defined in the `<HELM_HOME>/pattern-distributed/values.yaml` file:
 
 * `sharedSiddhiFilesLocationPath`
 
@@ -65,10 +65,10 @@ Grant read-write-execute permissions to the `wso2carbon` user, for each of the p
 
 ##### 3. Provide configurations.
 
-a. The default product configurations are available at `<HELM_HOME>/pattern-distributed-conf/confs` folder. Change the 
+a. The default product configurations are available at `<HELM_HOME>/pattern-distributed/confs` folder. Change the
 configurations as necessary.
 
-b. Open the `<HELM_HOME>/pattern-distributed-conf/values.yaml` and provide the following values.
+b. Open the `<HELM_HOME>/pattern-distributed/values.yaml` and provide the following values.
 
 | Parameter                       | Description                                                                               |
 |---------------------------------|-------------------------------------------------------------------------------------------|
@@ -78,23 +78,10 @@ b. Open the `<HELM_HOME>/pattern-distributed-conf/values.yaml` and provide the f
 | `namespace`                     | Kubernetes Namespace in which the resources are deployed                                  |
 | `svcaccount`                    | Kubernetes Service Account in the `namespace` to which product instance pods are attached |
 | `serverIp`                      | NFS Server IP                                                                             |
-| `locationPath`                  | NFS location path                                                                         |
 | `sharedSiddhiFilesLocationPath` | NFS location path for shared Siddhi file directory(`<SP_HOME>/deployment/siddhi-files/`)  |
 
-c. Open the `<HELM_HOME>/pattern-distributed-deployment/values.yaml` and provide the following values. 
-    
-| Parameter                       | Description                                                                               |
-|---------------------------------|-------------------------------------------------------------------------------------------|
-| `namespace`                     | Kubernetes Namespace in which the resources are deployed                                  |
-| `svcaccount`                    | Kubernetes Service Account in the `namespace` to which product instance pods are attached |
 
-##### 4. Deploy the configurations.
-
-  ```
-  helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed-conf
-  ```
-
-##### 5. Deploy product database(s) using MySQL in Kubernetes.
+##### 4. Deploy product database(s) using MySQL in Kubernetes.
 
   ```
   helm install --name sp-rdbms -f <HELM_HOME>/mysql/values.yaml stable/mysql --namespace <NAMESPACE>
@@ -104,13 +91,15 @@ c. Open the `<HELM_HOME>/pattern-distributed-deployment/values.yaml` and provide
   
   For a serious deployment (e.g. production grade setup), it is recommended to connect product instances to a user owned and managed RDBMS instance.
 
-##### 6. Deploy the fully distributed deployment of WSO2 Stream Processor.
+##### 5. Deploy the fully distributed deployment of WSO2 Stream Processor.
 
   ```
-  helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed-deployment
+  helm install --name <RELEASE_NAME> <HELM_HOME>/pattern-distributed --namespace <NAMESPACE>
   ```
+
+  `NAMESPACE` should be same as `step 3.b`.
   
-##### 7. Access Management Consoles.
+##### 6. Access Management Consoles.
 
 a. Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses.
 
@@ -135,12 +124,12 @@ b. Add the above host as an entry in /etc/hosts file as follows:
   <EXTERNAL-IP>	wso2sp-manager-2
   ```
 
-##### 8. Siddhi applications should be deployed to the manager cluster using one of the following methods.
+##### 7. Siddhi applications should be deployed to the manager cluster using one of the following methods.
 
 a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
 
 b. Sending a "POST" request to `http://<host>:<port>/siddhi-apps`, with the Siddhi App attached as a file in the request as shown in the example below.
-Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP420/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
+Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP430/Stream+Processor+REST+API+Guide) for more information on using WSO2 Stream Processor APIs.
 
   ```
   curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k
@@ -151,7 +140,7 @@ Default deployment will expose two publicly accessible hosts, namely: <br>
 * `wso2sp-manager-1` - To expose Manager Node 1 <br>
 * `wso2sp-manager-2` - To expose Manager Node 2 <br>
 
-##### 9. Access Status Dashboard.
+##### 8. Access Status Dashboard.
 
 Try navigating to `https://wso2sp-dashboard/monitoring` from your favorite browser.
 
