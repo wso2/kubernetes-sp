@@ -1,5 +1,5 @@
 ################################################################################
-#   Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved
+#   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved
 #
 #   Licensed under the Apache License, Version 2.0 (the \"License\");
 #   you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 ################################################################################
-
   # Carbon Configuration Parameters
 wso2.carbon:
     # value to uniquely identify a server
@@ -24,42 +23,27 @@ wso2.carbon:
   ports:
       # port offset
     offset: ${OFFSET}
-
 wso2.transport.http:
   transportProperties:
-    -
-      name: "server.bootstrap.socket.timeout"
-      value: 60
-    -
-      name: "client.bootstrap.socket.timeout"
-      value: 60
-    -
-      name: "latency.metrics.enabled"
-      value: true
-    -
-      name: "server.bootstrap.boss.group.size"
-      value: 20
-    -
-      name: "server.bootstrap.worker.group.size"
-      value: 20
+  - name: server.bootstrap.socket.timeout
+    value: 60
+  - name: client.bootstrap.socket.timeout
+    value: 60
+  - name: latency.metrics.enabled
+    value: true
   listenerConfigurations:
-    -
-      id: "default"
-      host: "0.0.0.0"
-      port: 9090
-    -
-      id: "msf4j-https"
-      host: "0.0.0.0"
-      port: ${NODE_PORT}
-      scheme: https
-      keyStoreFile: "${carbon.home}/resources/security/wso2carbon.jks"
-      keyStorePassword: wso2carbon
-      certPass: wso2carbon
-
+  - id: default
+    host: 0.0.0.0
+    port: 9090
+  - id: msf4j-https
+    host: 0.0.0.0
+    port: ${NODE_PORT}
+    scheme: https
+    keyStoreFile: ${carbon.home}/resources/security/wso2carbon.jks
+    keyStorePassword: wso2carbon
+    certPass: wso2carbon
   senderConfigurations:
-    -
-      id: "http-sender"
-
+  - id: http-sender
   # Configuration used for the databridge communication
 databridge.config:
     # No of worker threads to consume events
@@ -73,19 +57,18 @@ databridge.config:
   eventBufferSize: 2000
     # Keystore file path
     # THIS IS A MANDATORY FIELD
-  keyStoreLocation : ${sys:carbon.home}/resources/security/wso2carbon.jks
+  keyStoreLocation: ${sys:carbon.home}/resources/security/wso2carbon.jks
     # Keystore password
     # THIS IS A MANDATORY FIELD
-  keyStorePassword : wso2carbon
+  keyStorePassword: wso2carbon
     # Session Timeout value in mins
     # THIS IS A MANDATORY FIELD
   clientTimeoutMin: 30
     # Data receiver configurations
     # THIS IS A MANDATORY FIELD
   dataReceivers:
-  -
       # Data receiver configuration
-    dataReceiver:
+  - dataReceiver:
         # Data receiver type
         # THIS IS A MANDATORY FIELD
       type: Thrift
@@ -93,10 +76,8 @@ databridge.config:
       properties:
         tcpPort: '7611'
         sslPort: '7711'
-
-  -
       # Data receiver configuration
-    dataReceiver:
+  - dataReceiver:
         # Data receiver type
         # THIS IS A MANDATORY FIELD
       type: Binary
@@ -107,15 +88,13 @@ databridge.config:
         tcpReceiverThreadPoolSize: '100'
         sslReceiverThreadPoolSize: '100'
         hostName: 0.0.0.0
-
   # Configuration of the Data Agents - to publish events through databridge
 data.agent.config:
     # Data agent configurations
     # THIS IS A MANDATORY FIELD
   agents:
-  -
       # Data agent configuration
-    agentConfiguration:
+  - agentConfiguration:
         # Data agent name
         # THIS IS A MANDATORY FIELD
       name: Thrift
@@ -125,9 +104,9 @@ data.agent.config:
         # Data publisher strategy
       publishingStrategy: async
         # Trust store path
-      trustStorePath: '${sys:carbon.home}/resources/security/client-truststore.jks'
+      trustStorePath: ${sys:carbon.home}/resources/security/client-truststore.jks
         # Trust store password
-      trustStorePassword: 'wso2carbon'
+      trustStorePassword: wso2carbon
         # Queue Size
       queueSize: 32768
         # Batch Size
@@ -162,9 +141,8 @@ data.agent.config:
       sslEnabledProtocols: TLSv1.1,TLSv1.2
         # Ciphers
       ciphers: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
-  -
       # Data agent configuration
-    agentConfiguration:
+  - agentConfiguration:
         # Data agent name
         # THIS IS A MANDATORY FIELD
       name: Binary
@@ -174,9 +152,9 @@ data.agent.config:
         # Data publisher strategy
       publishingStrategy: async
         # Trust store path
-      trustStorePath: '${sys:carbon.home}/resources/security/client-truststore.jks'
+      trustStorePath: ${sys:carbon.home}/resources/security/client-truststore.jks
         # Trust store password
-      trustStorePassword: 'wso2carbon'
+      trustStorePassword: wso2carbon
         # Queue Size
       queueSize: 32768
         # Batch Size
@@ -211,12 +189,10 @@ data.agent.config:
       sslEnabledProtocols: TLSv1.1,TLSv1.2
         # Ciphers
       ciphers: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
-
   # Deployment configuration parameters
 wso2.artifact.deployment:
     # Scheduler update interval
   updateInterval: 5
-
   # Periodic Persistence Configuration
 state.persistence:
   enabled: false
@@ -225,7 +201,6 @@ state.persistence:
   persistenceStore: org.wso2.carbon.stream.processor.core.persistence.FileSystemPersistenceStore
   config:
     location: siddhi-app-persistence
-
   # Secure Vault Configuration
 wso2.securevault:
   secretRepository:
@@ -241,21 +216,21 @@ wso2.securevault:
 wso2.datasources:
   dataSources:
   - name: SP_MGT_DB
-    description: The datasource used for registry and user manager
-    jndiConfig:
-     name: jdbc/WSO2ClusterDB
+    description: The datasource used by cluster coordinators in distributed deployment
     definition:
       type: RDBMS
       configuration:
-        jdbcUrl: 'jdbc:mysql://sp-rdbms:3306/SP_MGT_DB?useSSL=false'
+        jdbcUrl: jdbc:mysql://sp-rdbms:3306/SP_MGT_DB?useSSL=false
         username: wso2carbon
         password: wso2carbon
         driverClassName: com.mysql.jdbc.Driver
-        maxPoolSize: 50
+        maxPoolSize: 10
         idleTimeout: 60000
         connectionTestQuery: SELECT 1
         validationTimeout: 30000
         isAutoCommit: false
+    jndiConfig:
+      name: jdbc/WSO2ClusterDB
   - name: WSO2_PERMISSIONS_DB
     description: The datasource used for permission feature
     jndiConfig:
@@ -264,11 +239,11 @@ wso2.datasources:
     definition:
       type: RDBMS
       configuration:
-        jdbcUrl: 'jdbc:h2:${sys:carbon.home}/wso2/${sys:wso2.runtime}/database/PERMISSION_DB;IFEXISTS=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MVCC=TRUE'
+        jdbcUrl: jdbc:h2:${sys:carbon.home}/wso2/${sys:wso2.runtime}/database/PERMISSION_DB;IFEXISTS=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MVCC=TRUE
         username: wso2carbon
         password: wso2carbon
         driverClassName: org.h2.Driver
-        maxPoolSize: 50
+        maxPoolSize: 10
         idleTimeout: 60000
         connectionTestQuery: SELECT 1
         validationTimeout: 30000
@@ -276,14 +251,13 @@ wso2.datasources:
   # Cluster Configuration
 cluster.config:
   enabled: true
-  groupId:  sp-mgt
+  groupId: sp-mgt
   coordinationStrategyClass: org.wso2.carbon.cluster.coordinator.rdbms.RDBMSCoordinationStrategy
   strategyConfig:
     datasource: SP_MGT_DB     # define a mysql datasource configured to the shared database
     heartbeatInterval: 200
     heartbeatMaxRetry: 2
     eventPollingInterval: 200
-
   # Deployment Configuration for Distributed Deployment
 deployment.config:
   type: distributed
@@ -294,5 +268,23 @@ deployment.config:
   heartbeatMaxRetry: 4
   datasource: SP_MGT_DB           # define a mysql datasource in datasources and refer it from here.
   minResourceCount: 2
-  bootstrapURLs: kafka-service:9092   # kafka urls
-  zooKeeperURLs: zoo1:2181,zoo2:2181,zoo3:2181   # zookeeper urls
+  bootstrapURLs: kafka-service:9092 # kafka urls
+  zooKeeperConfig:
+    zooKeeperURLs: zoo1:2181,zoo2:2181,zoo3:2181 # zookeeper urls
+    connectionTimeout: 10000
+    sessionTimeout: 10000
+# Authentication configuration
+auth.configs:
+  type: local          # Type of the IdP client used
+  userManager:
+    adminRole: admin   # Admin role which is granted all permissions
+    userStore:         # User store
+      users:
+      - user:
+          username: admin
+          password: YWRtaW4=
+          roles: 1
+      roles:
+      - role:
+          id: 1
+          displayName: admin

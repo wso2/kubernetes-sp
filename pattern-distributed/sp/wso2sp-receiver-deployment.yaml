@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       -
-        image: docker.wso2.com/wso2sp-worker:4.3.0
+        image: wso2/wso2sp-worker:4.4.0
         name: wso2sp-receiver
         imagePullPolicy: Always
         securityContext:
@@ -101,11 +101,9 @@ spec:
           mountPath: "/home/wso2carbon/kubernetes-volumes/worker/bin/"
         livenessProbe:
           tcpSocket:
-            port: 9090
-          initialDelaySeconds: 300
+            port: 9444
+          initialDelaySeconds: 70
           periodSeconds: 20
-      imagePullSecrets:
-      - name: wso2creds
       serviceAccountName: "wso2svcacct"
       volumes:
       - name: sp-worker-conf
