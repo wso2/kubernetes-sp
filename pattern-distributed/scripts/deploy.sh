@@ -34,7 +34,7 @@ then
  echo
  HAS_SUBSCRIPTION=0
  if ! grep -q "imagePullSecrets" ../sp/wso2sp-dashboard-deployment.yaml; then
-     if ! sed -i.bak -e 's|wso2/|gcr.io/research-n-development-209206/|' \
+     if ! sed -i.bak -e 's|wso2/|docker.wso2.com/|' \
      ../sp/wso2sp-dashboard-deployment.yaml  \
      ../sp/wso2sp-manager-1-deployment.yaml \
      ../sp/wso2sp-manager-2-deployment.yaml \
@@ -51,6 +51,7 @@ then
      ../sp/wso2sp-receiver-deployment.yaml \
      ../sp/wso2sp-worker-deployment.yaml; then
      echo "couldn't configure the \"imagePullSecrets:\""
+     exit 1
      fi
       if ! sed -i.bak -e '/imagePullSecrets/a \
     \      - name: wso2creds' \
@@ -60,17 +61,37 @@ then
      ../sp/wso2sp-receiver-deployment.yaml \
      ../sp/wso2sp-worker-deployment.yaml; then
      echo "couldn't configure the \"- name: wso2creds\""
+     exit 1
      fi
-     # remove backup files
-     rm ../sp/*.bak
  fi
 elif [[ $REPLY =~ ^[Nn]$ || -z "$REPLY" ]]
 then
  HAS_SUBSCRIPTION=1
+ if ! sed -i.bak -e '/imagePullSecrets:/d' -e '/- name: wso2creds/d' \
+     ../sp/wso2sp-dashboard-deployment.yaml  \
+     ../sp/wso2sp-manager-1-deployment.yaml \
+     ../sp/wso2sp-manager-2-deployment.yaml \
+     ../sp/wso2sp-receiver-deployment.yaml \
+     ../sp/wso2sp-worker-deployment.yaml; then
+     echo "couldn't configure the \"- name: wso2creds\""
+     exit 1
+ fi
+ if ! sed -i.bak -e 's|docker.wso2.com|wso2|' \
+  ../sp/wso2sp-dashboard-deployment.yaml  \
+  ../sp/wso2sp-manager-1-deployment.yaml \
+  ../sp/wso2sp-manager-2-deployment.yaml \
+  ../sp/wso2sp-receiver-deployment.yaml \
+  ../sp/wso2sp-worker-deployment.yaml; then
+  echo "couldn't configure the docker.wso2.com"
+  exit 1
+ fi
 else
  echo "Invalid option"
  exit 1
 fi
+
+# remove backup files
+rm ../sp/*.bak
 
 # create a new Kubernetes Namespace
 ${KUBECTL} create namespace wso2
