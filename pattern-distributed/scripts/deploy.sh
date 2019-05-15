@@ -91,7 +91,7 @@ else
 fi
 
 # remove backup files
-rm ../sp/*.bak
+test -f ../sp/*.bak && rm ../sp/*.bak
 
 # create a new Kubernetes Namespace
 ${KUBECTL} create namespace wso2
