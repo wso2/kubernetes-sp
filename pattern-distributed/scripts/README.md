@@ -1,6 +1,6 @@
 # Kubernetes Test Resources for a Fully Distributed Deployment of WSO2 Stream Processor
 
-Kubernetes Test Resources for a [fully distributed deployment of WSO2 Stream Processor](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment) contain artifacts,
+Kubernetes Test Resources for a [fully distributed deployment of WSO2 Stream Processor](https://docs.wso2.com/display/SP440/Fully+Distributed+Deployment) contain artifacts,
 which can be used to test the core Kubernetes resources provided for a fully distributed deployment of WSO2 Stream Processor.
 
 ## Contents
@@ -82,7 +82,7 @@ for deploying the product databases, using MySQL in Kubernetes. However, this ap
   
 In a **production grade setup**,
 
-* Setup the external product databases. Please refer to WSO2's official documentation [1](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment) on creating the required databases for the deployment.
+* Setup the external product databases. Please refer to WSO2's official documentation [1](https://docs.wso2.com/display/SP440/Fully+Distributed+Deployment) on creating the required databases for the deployment.
   
   Provide appropriate connection URLs, corresponding to the created external databases and the relevant driver class names for the data sources defined in
   the following files under `wso2.datasources` configurations:
@@ -90,7 +90,7 @@ In a **production grade setup**,
   * `<KUBERNETES_HOME>/pattern-distributed/confs/sp-manager/conf/deployment.yaml`
   * `<KUBERNETES_HOME>/pattern-distributed/confs/sp-worker/conf/deployment.yaml`
 
-  Please refer WSO2's [official documentation](https://docs.wso2.com/display/SP420/Configuring+Datasources) on configuring data sources.
+  Please refer WSO2's [official documentation](https://docs.wso2.com/display/SP440/Configuring+Datasources) on configuring data sources.
 
 ##### 5. Deploy Kubernetes resources.
 
@@ -131,7 +131,7 @@ wso2sp-manager-2-ingress                         wso2sp-manager-2          <EXTE
 a. Dropping the .siddhi file in to the `/data/pattern-distributed/siddhi-files` in the NFS node directory before or after starting the manager node.
 
 b. Sending a "POST" request to `http://<host>:<port>/siddhi-apps`, with the Siddhi App attached as a file in the request as shown in the example below.
-Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP420/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
+Refer [Stream Processor REST API Guide](https://docs.wso2.com/display/SP440/Stream+Processor+REST+API+Guide) for more information on using WSO2 Strean Processor APIs.
 
 ```
 curl -X POST "https://wso2sp-manager-1/siddhi-apps" -H "accept: application/json" -H "Content-Type: text/plain" -d @TestSiddhiApp.siddhi -u admin:admin -k
