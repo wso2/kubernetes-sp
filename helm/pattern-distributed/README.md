@@ -69,8 +69,8 @@ Grant read-write-execute permissions to the `wso2carbon` user, for each of the p
 a. The default product configurations are available at `<HELM_HOME>/pattern-distributed/confs` folder. Change the
 configurations as necessary.
 
-b. Open the `<HELM_HOME>/pattern-distributed/values.yaml` and provide the following values. If you do not have active
-WSO2 subscription do not change the parameters `username`, `password` and `email`. 
+b. Open the `<HELM_HOME>/pattern-distributed/values.yaml` and provide the following values. Don't change the 
+parameters `username`, `password` and `email`, if you do not have active WSO2 subscription. 
 
 | Parameter                       | Description                                                                               |
 |---------------------------------|-------------------------------------------------------------------------------------------|
