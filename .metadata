@@ -208,3 +208,193 @@ files:
                 port: 9544
                 username: admin
                 password: admin
+
+# files based configurations for helm
+  - file_path: /helm/pattern-distributed/pattern-distributed/templates/wso2sp-dashboard-deployment.yaml
+    relative_path: ~
+    file_type: txt
+    configurations:
+      - operation: replace
+        current_value: "{$arg.existing_version}"
+        new_value: "{$arg.new_version}"
+  - file_path: /helm/pattern-distributed/pattern-distributed/templates/wso2sp-manager-1-deployment.yaml
+    relative_path: ~
+    file_type: txt
+    configurations:
+      - operation: replace
+        current_value: "{$arg.existing_version}"
+        new_value: "{$arg.new_version}"
+  - file_path: /helm/pattern-distributed/pattern-distributed/templates/wso2sp-manager-2-deployment.yaml
+    relative_path: ~
+    file_type: txt
+    configurations:
+      - operation: replace
+        current_value: "{$arg.existing_version}"
+        new_value: "{$arg.new_version}"
+  - file_path: /helm/pattern-distributed/pattern-distributed/templates/wso2sp-receiver-deployment.yaml
+    relative_path: ~
+    file_type: txt
+    configurations:
+      - operation: replace
+        current_value: "{$arg.existing_version}"
+        new_value: "{$arg.new_version}"
+  - file_path: /helm/pattern-distributed/pattern-distributed/templates/wso2sp-worker-deployment.yaml
+    relative_path: ~
+    file_type: txt
+    configurations:
+      - operation: replace
+        current_value: "{$arg.existing_version}"
+        new_value: "{$arg.new_version}"
+  - file_path: /helm/pattern-distributed/pattern-distributed/confs/sp-manager/conf/deployment.yaml
+    relative_path: "{$arg.wso2sp}/conf/manager/deployment.yaml"
+    file_type: yaml
+    configurations:
+      - operation: replace
+        xpath:  "wso2.carbon/id"
+        value: "${NODE_ID}"
+      - operation: replace
+        xpath:  "wso2.carbon/ports/offset"
+        value: "${OFFSET}"
+      - operation: replace
+        xpath:  "wso2.transport.http/listenerConfigurations[id=\"default\"]/port"
+        value: 9090
+      - operation: replace
+        xpath:  "wso2.transport.http/listenerConfigurations[id=\"msf4j-https\"]/port"
+        value: "${NODE_PORT}"
+#      - operation: add
+#        xpath: "wso2.datasources/dataSources[name=\"SP_MGT_DB\"]"
+#        value: |
+#              jndiConfig:
+#                 name: jdbc/WSO2ClusterDB
+      - operation: replace
+        xpath: "wso2.datasources/dataSources[name=\"SP_MGT_DB\"]/definition/configuration/jdbcUrl"
+        value: "jdbc:mysql://sp-rdbms:3306/SP_MGT_DB?useSSL=false"
+      - operation: replace
+        xpath: "wso2.datasources/dataSources[name=\"SP_MGT_DB\"]/definition/configuration/driverClassName"
+        value: "com.mysql.jdbc.Driver"
+      - operation: replace
+        xpath: "cluster.config/enabled"
+        value: true
+      - operation: replace
+        xpath: "cluster.config/groupId"
+        value: "sp-mgt"
+      - operation: replace
+        xpath: "cluster.config/strategyConfig/heartbeatInterval"
+        value: 200
+      - operation: replace
+        xpath: "cluster.config/strategyConfig/eventPollingInterval"
+        value: 200
+      - operation: replace
+        xpath: "deployment.config/httpsInterface/host"
+        value: "${NODE_ID}"
+      - operation: replace
+        xpath: "deployment.config/httpsInterface/port"
+        value: "${NODE_PORT}"
+      - operation: replace
+        xpath: "deployment.config/heartbeatInterval"
+        value: 1000
+      - operation: replace
+        xpath: "deployment.config/heartbeatMaxRetry"
+        value: 4
+      - operation: replace
+        xpath: "deployment.config/minResourceCount"
+        value: 2
+      - operation: replace
+        xpath: "deployment.config/bootstrapURLs"
+        value: "kafka-service:9092"
+      - operation: replace
+        xpath: "deployment.config/zooKeeperConfig/zooKeeperURLs"
+        value: "zoo1:2181,zoo2:2181,zoo3:2181"
+  - file_path: /helm/pattern-distributed/pattern-distributed/confs/sp-manager/bin/carbon.sh
+    relative_path: "{$arg.wso2sp}/wso2/manager/bin/carbon.sh"
+    file_type: sh
+    configurations:
+      - operation: replace
+        current_value: "-Xms256m -Xmx1024m"
+        new_value: "-Xms1024m -Xmx2048m"
+  - file_path: /helm/pattern-distributed/pattern-distributedf/confs/sp-worker/bin/carbon.sh
+    relative_path: "{$arg.wso2sp}/wso2/worker/bin/carbon.sh"
+    file_type: sh
+    configurations:
+      - operation: replace
+        current_value: "-Xms256m -Xmx1024m"
+        new_value: "-Xms1024m -Xmx2048m"
+  - file_path: /helm/pattern-distributed/pattern-distributed/confs/sp-worker/conf/deployment.yaml
+    relative_path: "{$arg.wso2sp}/conf/worker/deployment.yaml"
+    file_type: yaml
+    configurations:
+      - operation: replace
+        xpath:  "wso2.carbon/id"
+        value: "${NODE_IP}"
+      - operation: replace
+        xpath:  "wso2.carbon/ports/offset"
+        value: "${OFFSET}"
+      - operation: replace
+        xpath:  "wso2.transport.http/listenerConfigurations[id=\"default\"]/host"
+        value: "${NODE_IP}"
+      - operation: replace
+        xpath:  "wso2.transport.http/listenerConfigurations[id=\"msf4j-https\"]/host"
+        value: "${NODE_IP}"
+      - operation: replace
+        xpath:  "wso2.transport.http/listenerConfigurations[id=\"msf4j-https\"]/port"
+        value: "${NODE_PORT}"
+      - operation: replace
+        xpath:  "databridge.config/dataReceivers/dataReceiver[type=\"Binary\"]/properties/hostName"
+        value: "${NODE_IP}"
+      - operation: replace
+        xpath:  "wso2.metrics.jdbc/dataSource[dataSourceName=\"java:comp/env/jdbc/WSO2MetricsDB\"]/scheduledCleanup/enabled"
+        value: "false"
+      - operation: replace
+        xpath:  "wso2.metrics.jdbc/reporting/jdbc[name=\"JDBC\"]/enabled"
+        value: false
+      - operation: replace
+        xpath:  "state.persistence/enabled"
+        value: true
+      - operation: replace
+        xpath:  "state.persistence/persistenceStore"
+        value: "org.wso2.carbon.stream.processor.core.persistence.DBPersistenceStore"
+      - operation: replace
+        xpath:  "state.persistence/config/datasource"
+        value: "SP_WORKER_STATE_DB"
+      - operation: replace
+        xpath:  "state.persistence/config/table"
+        value: "PERSISTENCE_TABLE"
+      - operation: add
+        xpath: "wso2.datasources/dataSources"
+        value:
+          |
+          name: SP_WORKER_STATE_DB
+          description: The datasource used for registry and user manager
+          definition:
+            type: RDBMS
+            configuration:
+              jdbcUrl: 'jdbc:mysql://sp-rdbms:3306/SP_WORKER_STATE_DB?useSSL=false'
+              username: root
+              password: 'root'
+              driverClassName: com.mysql.jdbc.Driver
+              maxPoolSize: 50
+              idleTimeout: 60000
+              connectionTestQuery: SELECT 1
+              validationTimeout: 30000
+              isAutoCommit: false
+      - operation: add
+        xpath: "."
+        value: |
+          deployment.config:
+            type: distributed
+            isReceiverNode: ${RECEIVER_NODE}
+            httpsInterface:
+              host: ${NODE_IP}
+              port: ${NODE_PORT}
+              username: admin
+              password: admin
+            leaderRetryInterval: 1000
+            resourceManagers:
+              - host: wso2sp-manager-1
+                port: 9543
+                username: admin
+                password: admin
+              - host: wso2sp-manager-2
+                port: 9544
+                username: admin
+                password: admin
