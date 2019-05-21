@@ -33,8 +33,11 @@ spec:
         pattern: wso2sp-pattern-distributed
     spec:
       containers:
-      -
-        image: docker.wso2.com/wso2sp-worker:4.3.0
+      - {{- if eq .Values.username ""}}
+        image: wso2/wso2sp-worker:4.4.0
+        {{- else}}
+        image: docker.wso2.com/wso2sp-worker:4.4.0
+        {{- end}}
         name: wso2sp-worker
         imagePullPolicy: Always
         securityContext:
@@ -102,11 +105,9 @@ spec:
           mountPath: "/home/wso2carbon/kubernetes-volumes/worker/bin/"
         livenessProbe:
           tcpSocket:
-            port: 9090
-          initialDelaySeconds: 300
+            port: 9443
+          initialDelaySeconds: 70
           periodSeconds: 20
-      imagePullSecrets:
-      - name: wso2creds
       serviceAccountName: {{ .Values.svcaccount }}
       volumes:
       - name: sp-worker-conf
