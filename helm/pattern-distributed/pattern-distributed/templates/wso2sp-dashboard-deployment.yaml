@@ -32,7 +32,11 @@ spec:
         pattern: wso2sp-pattern-distributed
     spec:
       containers:
-      - image: docker.wso2.com/wso2sp-dashboard:4.3.0
+      - {{- if eq .Values.username ""}}
+        image: wso2/wso2sp-dashboard:4.4.0
+        {{- else}}
+        image: docker.wso2.com/wso2sp-dashboard:4.4.0
+        {{- end}}
         name: wso2sp-status-dashboard
         imagePullPolicy: IfNotPresent
         securityContext:
@@ -54,24 +58,13 @@ spec:
            valueFrom:
              fieldRef:
                fieldPath: status.podIP
-
         ports:
         -
           containerPort: 9643
           protocol: "TCP"
-
-        volumeMounts:
-        - name: sp-dashboard-conf
-          mountPath: "/home/wso2carbon/wso2-config-volume/conf/dashboard/"
         livenessProbe:
           tcpSocket:
             port: 9643
-          initialDelaySeconds: 300
+          initialDelaySeconds: 70
           periodSeconds: 20
-      imagePullSecrets:
-            - name: wso2creds
-      volumes:
-      - name: sp-dashboard-conf
-        configMap:
-          name: sp-dashboard-conf
       serviceAccountName: {{ .Values.svcaccount }}

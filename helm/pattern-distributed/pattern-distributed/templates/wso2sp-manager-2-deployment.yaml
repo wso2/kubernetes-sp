@@ -34,7 +34,11 @@ spec:
       securityContext:
         runAsUser: 802
       containers:
-      - image: docker.wso2.com/wso2sp-manager:4.3.0
+      - {{- if eq .Values.username ""}}
+        image: wso2/wso2sp-manager:4.4.0
+        {{- else}}
+        image: docker.wso2.com/wso2sp-manager:4.4.0
+        {{- end}}
         name: wso2sp-manager-2
         imagePullPolicy: Always
         resources:
@@ -81,21 +85,18 @@ spec:
         -
           containerPort: 7611
           protocol: "TCP"
-
         volumeMounts:
         - name: sp-manager-conf
           mountPath: "/home/wso2carbon/wso2-config-volume/conf/manager/"
         - name: sp-manager-bin
           mountPath: "/home/wso2carbon/kubernetes-volumes/manager/bin/"
         - name: sp-mgt-storage-volume
-          mountPath: "/home/wso2carbon/wso2sp-4.3.0/deployment/siddhi-files/"
+          mountPath: "/home/wso2carbon/wso2sp-4.4.0/deployment/siddhi-files/"
         livenessProbe:
           tcpSocket:
             port: 9544
-          initialDelaySeconds: 300
+          initialDelaySeconds: 70
           periodSeconds: 20
-      imagePullSecrets:
-      - name: wso2creds
       volumes:
       - name: sp-manager-conf
         configMap:
