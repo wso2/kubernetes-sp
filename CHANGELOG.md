@@ -3,7 +3,7 @@ All notable changes to this project 4.4.x per each release will be documented in
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## [Unreleased]
+## [v4.4.0.1] - 2018-05-24
 
 ### Added
 - Kubernetes resources for WSO2 Stream Processing (SP) [deployment patterns](https://docs.wso2.com/display/SP440/Fully+Distributed+Deployment)
