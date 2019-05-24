@@ -11,23 +11,23 @@ Core Kubernetes resources for a [fully distributed deployment of WSO2 Stream Pro
 
 ## Prerequisites
 
-* In order to use updated docker images, you need an active WSO2 subscription. If you do not possess an active WSO2
-  subscription already, you can sign up for a WSO2 Free Trial Subscription from [here](https://wso2.com/free-trial-subscription)
-  . Otherwise you can proceed with docker images which are created using GA releases.<br><br>
+* In order to use Docker images with WSO2 updates, you need an active WSO2 subscription. If you do not possess an active WSO2
+  subscription, you can sign up for a WSO2 Free Trial Subscription from [here](https://wso2.com/free-trial-subscription).
+  Otherwise, you can proceed with Docker images which are created using GA releases.<br><br>
   
-* Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (compatible with v1.10)
-in order to run the steps provided in the following quick start guide.<br><br>
+* Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+  in order to run the steps provided in the following quick start guide.<br><br>
 
 * An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup/pick-right-solution/).<br><br>
 
 * A pre-configured Network File System (NFS) to be used as the persistent volume for artifact sharing and persistence.
-In the NFS server instance, create a Linux system user account named `wso2carbon` with user id `802` and a system group named `wso2` with group id `802`.
-Add the `wso2carbon` user to the group `wso2`.
+  In the NFS server instance, create a Linux system user account named `wso2carbon` with user id `802` and a system group named `wso2` with group id `802`.
+  Add the `wso2carbon` user to the group `wso2`.
 
-```
-groupadd --system -g 802 wso2
-useradd --system -g 802 -u 802 wso2carbon
-```
+    ```
+    groupadd --system -g 802 wso2
+    useradd --system -g 802 -u 802 wso2carbon
+    ```
 
 ## Quick Start Guide
 
@@ -52,7 +52,47 @@ Then, switch the context to new `wso2` namespace.
 kubectl config set-context $(kubectl config current-context) --namespace=wso2
 ```
 
-##### 3. Setup product database(s).
+##### 3. [Optional] If you are using Docker images with WSO2 updates, perform the following changes.
+
+* Change the Docker image names such that each Kubernetes Deployment use WSO2 product Docker images from [`WSO2 Docker Registry`](https://docker.wso2.com).
+
+  Change the Docker image name, i.e. the `image` attribute under the [container specification](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/#container-v1-core)
+  of each Kubernetes Deployment resource.
+  
+  For example, change the default `wso2/wso2sp-dashboard:4.4.0` WSO2 Stream Processor Dashboard Docker image available at [DockerHub](https://hub.docker.com/u/wso2/) to
+  `docker.wso2.com/wso2sp-dashboard:4.4.0` WSO2 Stream Processor Dashboard Docker image available at [`WSO2 Docker Registry`](https://docker.wso2.com).
+
+* Create a Kubernetes Secret for pulling the required Docker images from [`WSO2 Docker Registry`](https://docker.wso2.com).
+
+  Create a Kubernetes Secret named `wso2creds` in the cluster to authenticate with the WSO2 Docker Registry, to pull the required images.
+
+  ```
+  kubectl create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=<WSO2_USERNAME> --docker-password=<WSO2_PASSWORD> --docker-email=<WSO2_USERNAME>
+  ```
+
+  `WSO2_USERNAME`: Your WSO2 username<br>
+  `WSO2_PASSWORD`: Your WSO2 password
+
+  Please see [Kubernetes official documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-in-the-cluster-that-holds-your-authorization-token)
+  for further details.
+    
+  Also, add the created `wso2creds` Kubernetes Secret as an entry to Kubernetes Deployment resources. Please add the following entry
+  under the [Kubernetes Pod Specification](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/#podspec-v1-core) `PodSpec` in each Deployment resource.
+    
+  ```
+  imagePullSecrets:
+  - name: wso2creds
+  ```
+
+The Kubernetes Deployment definition file(s) that need to be updated are as follows:
+
+* `<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-dashboard-deployment.yaml`
+* `<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-manager-1-deployment.yaml`
+* `<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-manager-2-deployment.yaml`
+* `<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-receiver-deployment.yaml`
+* `<KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-worker-deployment.yaml`
+
+##### 4. Setup product database(s).
 
 Setup the external product databases. Please refer WSO2's [official documentation](https://docs.wso2.com/display/SP420/Fully+Distributed+Deployment) on creating the required databases for the deployment.
                                        
@@ -100,11 +140,6 @@ for deploying the product databases, using MySQL in Kubernetes. However, this ap
       kubectl create -f <KUBERNETES_HOME>/pattern-distributed/extras/rdbms/mysql/mysql-service.yaml
       kubectl create -f <KUBERNETES_HOME>/pattern-distributed/extras/rdbms/mysql/mysql-deployment.yaml  
      ```
-     
-##### 4. Create a Kubernetes role and a role binding necessary for the Kubernetes API requests made from Kubernetes membership scheme. In order to create these resource an user with Kubernetes cluster-admin role is required.
-```
-kubectl create -f <KUBERNETES_HOME>/rbac/rbac.yaml
-```
 
 ##### 5. Setup a Network File System (NFS) to be used for persistent storage.
 
@@ -158,7 +193,7 @@ kubectl create -f <KUBERNETES_HOME>/pattern-distributed/sp/wso2sp-worker-deploym
 
 ##### 8. Deploy Kubernetes Ingress resource.
 
-The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
+The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller maintained by Kubernetes.
 
 In order to enable the NGINX Ingress controller in the desired cloud or on-premise environment,
 please refer the official documentation, [NGINX Ingress Controller Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).

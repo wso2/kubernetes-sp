@@ -41,7 +41,7 @@ git clone https://github.com/wso2/kubernetes-sp.git
 
 ##### 2. Deploy Kubernetes Ingress resource.
 
-The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller.
+The WSO2 Stream Processor Kubernetes Ingress resource uses the NGINX Ingress Controller maintained by Kubernetes.
 
 In order to enable the NGINX Ingress controller in the desired cloud or on-premise environment,
 please refer the official documentation, [NGINX Ingress Controller Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
@@ -103,9 +103,6 @@ Change directory to `<KUBERNETES_HOME>/sp-distributed/scripts` and execute the `
 ```
 ./deploy.sh
 ```
-
-* A Kubernetes role and a role binding necessary for the Kubernetes API requests made from Kubernetes membership scheme. In order to create these resource an user with Kubernetes cluster-admin role is required.
-
 
 >To un-deploy, be on the same directory and execute the `undeploy.sh` shell script on the terminal.
 
