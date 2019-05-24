@@ -48,24 +48,50 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             echoBold "Could not configure to use the Docker image available at WSO2 Private Docker Registry (docker.wso2.com)"
             exit 1
         fi
-        if ! ${SED} -i.bak -e '/serviceAccount/a \      imagePullSecrets:' \
-            ../sp/wso2sp-dashboard-deployment.yaml  \
-            ../sp/wso2sp-manager-1-deployment.yaml \
-            ../sp/wso2sp-manager-2-deployment.yaml \
-            ../sp/wso2sp-receiver-deployment.yaml \
-            ../sp/wso2sp-worker-deployment.yaml; then
-            echoBold "Could not configure Kubernetes Docker image pull secret: Failed to create \"imagePullSecrets:\" attribute"
-            exit 1
-        fi
-        if ! ${SED} -i.bak -e '/imagePullSecrets/a \      - name: wso2creds' \
-            ../sp/wso2sp-dashboard-deployment.yaml  \
-            ../sp/wso2sp-manager-1-deployment.yaml \
-            ../sp/wso2sp-manager-2-deployment.yaml \
-            ../sp/wso2sp-receiver-deployment.yaml \
-            ../sp/wso2sp-worker-deployment.yaml; then
-            echoBold "Could not configure Kubernetes Docker image pull secret: Failed to create secret name"
-            exit 1
-        fi
+
+        case "`uname`" in
+            Darwin*)
+                if ! ${SED} -i.bak -e '/serviceAccount/a \
+                \      imagePullSecrets:' \
+                    ../sp/wso2sp-dashboard-deployment.yaml  \
+                    ../sp/wso2sp-manager-1-deployment.yaml \
+                    ../sp/wso2sp-manager-2-deployment.yaml \
+                    ../sp/wso2sp-receiver-deployment.yaml \
+                    ../sp/wso2sp-worker-deployment.yaml; then
+                    echoBold "Could not configure Kubernetes Docker image pull secret: Failed to create \"imagePullSecrets:\" attribute"
+                    exit 1
+                fi
+                if ! ${SED} -i.bak -e '/imagePullSecrets/a \
+                \      - name: wso2creds' \
+                    ../sp/wso2sp-dashboard-deployment.yaml  \
+                    ../sp/wso2sp-manager-1-deployment.yaml \
+                    ../sp/wso2sp-manager-2-deployment.yaml \
+                    ../sp/wso2sp-receiver-deployment.yaml \
+                    ../sp/wso2sp-worker-deployment.yaml; then
+                    echoBold "Could not configure Kubernetes Docker image pull secret: Failed to create secret name"
+                    exit 1
+                fi;;
+            *)
+                if ! ${SED} -i.bak -e '/serviceAccount/a \      imagePullSecrets:' \
+                    ../sp/wso2sp-dashboard-deployment.yaml  \
+                    ../sp/wso2sp-manager-1-deployment.yaml \
+                    ../sp/wso2sp-manager-2-deployment.yaml \
+                    ../sp/wso2sp-receiver-deployment.yaml \
+                    ../sp/wso2sp-worker-deployment.yaml; then
+                    echoBold "Could not configure Kubernetes Docker image pull secret: Failed to create \"imagePullSecrets:\" attribute"
+                    exit 1
+                fi
+                if ! ${SED} -i.bak -e '/imagePullSecrets/a \      - name: wso2creds' \
+                    ../sp/wso2sp-dashboard-deployment.yaml  \
+                    ../sp/wso2sp-manager-1-deployment.yaml \
+                    ../sp/wso2sp-manager-2-deployment.yaml \
+                    ../sp/wso2sp-receiver-deployment.yaml \
+                    ../sp/wso2sp-worker-deployment.yaml; then
+                    echoBold "Could not configure Kubernetes Docker image pull secret: Failed to create secret name"
+                    exit 1
+                fi;;
+        esac
+
     fi
 elif [[ ${REPLY} =~ ^[Nn]$ || -z "${REPLY}" ]]; then
      HAS_SUBSCRIPTION=1
@@ -95,7 +121,7 @@ else
 fi
 
 # remove backup files
-${TEST} -f ../sp/*.bak && rm ../sp/*.bak
+${TEST} -f ../sp/wso2sp-dashboard-deployment.yaml.bak && rm ../sp/*.bak
 
 # create a new Kubernetes Namespace
 ${KUBERNETES_CLIENT} create namespace wso2
@@ -110,9 +136,6 @@ if [[ ${HAS_SUBSCRIPTION} -eq 0 ]]; then
     # create a Kubernetes Secret for passing WSO2 Private Docker Registry credentials
     ${KUBERNETES_CLIENT} create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=${WSO2_SUBSCRIPTION_USERNAME} --docker-password=${WSO2_SUBSCRIPTION_PASSWORD} --docker-email=${WSO2_SUBSCRIPTION_USERNAME}
 fi
-
-# create Kubernetes Role and Role Binding necessary for the Kubernetes API requests made from Kubernetes membership scheme
-${KUBERNETES_CLIENT} create  -f ../../rbac/rbac.yaml
 
 # volumes
 echo 'deploying persistence volumes ...'
@@ -173,4 +196,3 @@ sleep 20s
 
 echoBold 'Finished'
 echoBold 'To access the WSO2 Identity Server management console, try https://wso2is/carbon in your browser.'
-
