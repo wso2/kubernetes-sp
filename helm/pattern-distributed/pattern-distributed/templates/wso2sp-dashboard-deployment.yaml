@@ -68,3 +68,7 @@ spec:
           initialDelaySeconds: 70
           periodSeconds: 20
       serviceAccountName: {{ .Values.svcaccount }}
+      {{ if and (not (eq .Values.username "")) (not (eq .Values.password "")) }}
+      imagePullSecrets:
+      - name: wso2creds
+      {{ end }}

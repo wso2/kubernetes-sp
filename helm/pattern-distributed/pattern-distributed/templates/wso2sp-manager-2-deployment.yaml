@@ -109,3 +109,7 @@ spec:
         persistentVolumeClaim:
           claimName: sp-mgt-volume-claim
       serviceAccountName: {{ .Values.svcaccount }}
+      {{ if and (not (eq .Values.username "")) (not (eq .Values.password "")) }}
+      imagePullSecrets:
+      - name: wso2creds
+      {{ end }}
