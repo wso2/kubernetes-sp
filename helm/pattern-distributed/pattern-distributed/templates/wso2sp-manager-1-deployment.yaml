@@ -113,4 +113,3 @@ spec:
       imagePullSecrets:
       - name: wso2creds
       {{ end }}
-      
